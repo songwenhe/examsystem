@@ -1,9 +1,150 @@
 <template>
+  <div class="test-container">
+    <el-divider><i class="el-icon-s-platform"></i>测评列表</el-divider>
 
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column label="考试名称" prop="title"></el-table-column>
+      <el-table-column label="开始时间" prop="startTime"></el-table-column>
+      <el-table-column label="结束时间" prop="endTime"></el-table-column>
+      <el-table-column label="考试科目" prop="subjectId"> </el-table-column>
+      <el-table-column label="当前状态" prop="state">
+        <template slot-scope="scope">
+          <div slot="reference" class="name-wrapper" v-if="scope.row.state === 1">
+            <el-tag>未开始</el-tag>
+          </div>
+          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 2">
+            <el-tag type="success">进行中</el-tag>
+          </div>
+          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 3">
+            <el-tag type="danger">已结束</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column align="right">
+        <template slot="header" slot-scope="scope">
+          <el-input v-model="query.keyword" size="mini" placeholder="输入关键字搜索" :key="scope.row" />
+          <el-button class="el-icon-search" size="mini" @click="getContents"></el-button>
+        </template>
+        <template slot-scope="scope">
+          <el-button size="medium" type="success" icon="el-icon-search" circle></el-button>
+          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)" circle></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      @current-change="pageChange"
+      :page-size="query.size"
+      :pager-count="11"
+      layout="prev, pager, next"
+      :total="total"
+      style="margin-left: 0px"
+      :current-page="query.page"
+    ></el-pagination>
+  </div>
 </template>
 
 <script>
-export default {}
+const axios = require('axios')
+
+export default {
+  created() {
+    this.getSubjects()
+  },
+  data() {
+    return {
+      scope: '考试名称',
+      tableData: [],
+      pageSubjects: [],
+
+      total: 10,
+      query: {
+        size: 10,
+        page: 1,
+        keyword: ''
+      }
+    }
+  },
+  methods: {
+    pageChange(res) {
+      this.query.page = res
+      this.getContents()
+    },
+    handleEdit(index, row) {
+      console.log(index, row)
+    },
+    handleDelete(index, row) {
+      console.log(index, row)
+    },
+    handleTime(now) {
+      const time = new Date(now)
+      let res = ''
+      let year = time.getFullYear()
+      let month = time.getMonth() + 1
+      month = month > 9 ? month : '0' + month
+      let day = time.getDate()
+      day = day > 9 ? day : '0' + day
+      let hour = time.getHours()
+      hour = hour > 9 ? hour : '0' + hour
+      let minutes = time.getMinutes()
+      minutes = minutes > 9 ? minutes : '0' + minutes
+      let seconds = time.getSeconds()
+      seconds = seconds > 9 ? seconds : '0' + seconds
+      res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
+      return res
+    },
+    subjectName(id) {
+      //   console.log(this.pageSubjects)
+      let subject = this.pageSubjects.find((item) => id === item.id)
+      return subject.name
+    },
+    getContents() {
+      const contests = axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8088/contest/api/pageContest',
+        params: this.query
+      }).then((response) => {
+        /* this.tableData = response.data.list
+        this.tableData.forEach((item) => {
+          item.startTime = this.handleTime(item.startTime)
+          item.endTime = this.handleTime(item.endTime)
+          item.subjectId = this.subjectName(item.subjectId)
+          // console.log(Data.subjectName(item.subjectId))
+        }) */
+        this.total = response.data.total
+        this.tableData = response.data.list.map((item) => {
+          /*  return {
+            ...item,
+            startTime: this.handleTime(item.startTime),
+            endTime: this.handleTime(item.endTime),
+            subjectId: this.subjectName(item.subjectId)
+          } */
+          return Object.assign(item, {
+            startTime: this.handleTime(item.startTime),
+            endTime: this.handleTime(item.endTime),
+            subjectId: this.subjectName(item.subjectId)
+          })
+        })
+      })
+      return contests
+    },
+    getSubjects() {
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
+      }).then((response) => {
+        this.pageSubjects = response.data.list
+        this.getContents()
+      })
+    }
+  }
+}
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.el-icon-search {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+</style>

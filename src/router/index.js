@@ -1,9 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Test from '@/components/Test'
+import Subjects from '@/components/Subjects'
 Vue.use(VueRouter)
 
-const routes = [{ path: '/1', component: Test }]
+const routes = [
+  { path: '/', redirect: localStorage.getItem('index') },
+  { path: '/_contests', component: Test },
+  { path: '/_subjects', component: Subjects },
+  { path: '/demo', component: () => import('@/components/Demo') }
+]
 
 const router = new VueRouter({
   mode: 'history',

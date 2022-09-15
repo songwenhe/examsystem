@@ -28,35 +28,37 @@
             :router="true"
             :collapse-transition="false"
             :collapse="isCollapse"
-            default-active="1"
+            :default-active="index"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
+            @select="slt"
           >
-            <el-menu-item index="1"> <i class="el-icon-menu"></i><span>导航一</span> </el-menu-item>
-            <el-menu-item index="2">
+            <el-menu-item index="_contests"> <i class="el-icon-menu"></i><span slot="title">考试管理</span> </el-menu-item>
+            <el-menu-item index="_subjects">
               <i class="el-icon-location"></i>
-              <span slot="title">导航二</span>
+              <span slot="title">题目管理</span>
             </el-menu-item>
             <el-menu-item index="3">
               <i class="el-icon-document"></i>
-              <span slot="title">导航三</span>
+              <span slot="title">科目管理</span>
             </el-menu-item>
             <el-menu-item index="4">
               <i class="el-icon-setting"></i>
-              <span slot="title">导航四</span>
+              <span slot="title">成绩管理</span>
             </el-menu-item>
             <el-menu-item index="5">
               <i class="el-icon-location"></i>
-              <span>导航五</span>
+              <span>用户管理</span>
             </el-menu-item>
             <el-menu-item index="6">
               <i class="el-icon-location"></i>
-              <span>导航六</span>
+              <span>帖子管理</span>
             </el-menu-item>
             <el-menu-item index="7">
               <i class="el-icon-location"></i>
-              <span>导航七</span>
+              <span>评论管理</span>
+            </el-menu-item>
+            <el-menu-item index="8">
+              <i class="el-icon-menu"></i><span slot="title">{{ index }}</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -71,15 +73,18 @@
 export default {
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+      index: '_contests'
     }
   },
+  created() {
+    this.index = localStorage.getItem('index')
+    console.log(this.$route.fullPath)
+  },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath)
+    slt(evt) {
+      localStorage.setItem('index', evt)
+      this.index = localStorage.getItem('index')
     }
   }
 }

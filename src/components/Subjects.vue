@@ -45,10 +45,16 @@
         <el-form-item label="题目内容">
           <el-input type="textarea" v-model="ruleForm.content"></el-input>
         </el-form-item>
-        <el-form-item label="题目选项">
+        <el-form-item label="题目类型">
           <el-select v-model="ruleForm.questionType" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="题目答案" v-if="ruleForm.questionType === 0 || ruleForm.questionType === 1">
+          <el-input type="textarea" v-model="ruleForm.optionA" size="mini"></el-input>
+          <el-input type="textarea" v-model="ruleForm.optionB" size="mini"></el-input>
+          <el-input type="textarea" v-model="ruleForm.optionC" size="mini"></el-input>
+          <el-input type="textarea" v-model="ruleForm.optionD" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="题目答案">
           <el-input type="textarea" v-model="ruleForm.answer"></el-input>
@@ -66,7 +72,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="题目分数">
-          <el-input v-model="ruleForm.score"></el-input>
+          <el-input v-model="ruleForm.score" size="mini" style="width: 100px"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -118,6 +124,7 @@ export default {
       dialogFormVisible: false,
       tableData1: {},
       ruleForm: {
+        answerSwitch: true,
         id: 1,
         state: 1,
         subjectId: 1,
@@ -130,7 +137,11 @@ export default {
         parse: 'String',
         questionTypeName: '',
         difficulty: 1,
-        score: 2
+        score: 2,
+        optionA: '',
+        optionB: '',
+        optionC: '',
+        optionD: ''
       },
       ruleTable: {
         data1: [],
@@ -268,10 +279,10 @@ export default {
       this.ruleForm.parse = row.parse
       this.ruleForm.difficulty = row.difficulty
       this.ruleForm.score = row.score
-      //   method: 'put',
-      //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
-      //   params: {}
-      // })
+      this.ruleForm.optionA = row.optionA
+      this.ruleForm.optionB = row.optionB
+      this.ruleForm.optionC = row.optionC
+      this.ruleForm.optionD = row.optionD
     },
     subjectName(id) {
       // console.log(id)
@@ -319,9 +330,11 @@ export default {
       })
     },
     getQuestionType(type) {
-      if (type === 0) return '单选题'
-      else if (type === 1) return '多选题'
-      else if (type === 2) return '问答题'
+      if (type === 0) {
+        return '单选题'
+      } else if (type === 1) {
+        return '多选题'
+      } else if (type === 2) return '问答题'
       else if (type === 3) return '编程题'
       else return '未知题型'
     }

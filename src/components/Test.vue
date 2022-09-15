@@ -50,7 +50,7 @@
         </el-form-item>
         <el-form-item label="考试科目">
           <el-select v-model="ruleForm.subjectId" filterable placeholder="请选择科目">
-            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
           {{ ruleForm.subjectId }}{{ ruleForm.id }}
         </el-form-item>
@@ -238,7 +238,6 @@ export default {
       this.ruleForm.state = row.state
       this.ruleForm.totalScore = row.totalScore
       this.ruleForm.subjectId = row.subjectId
-
       // axios({
       //   method: 'put',
       //   url: 'http://127.0.0.1:8088/contest/api/updateContest',

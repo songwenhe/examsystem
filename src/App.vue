@@ -79,7 +79,7 @@ export default {
   },
   created() {
     this.index = localStorage.getItem('index')
-    console.log(this.$route.fullPath)
+    // console.log(this.$route.fullPath)
   },
   methods: {
     slt(evt) {

@@ -82,21 +82,46 @@
     </el-dialog>
 
     <el-dialog :visible.sync="dialogTableVisible" @close="clearTable">
-      <el-form :model="ruleTable" label-width="100px">
-        <el-form-item label="题目标题">
-          <el-input v-model="ruleTable.title"></el-input>
-        </el-form-item>
-        <el-form-item label="考试科目">
+      <el-form :model="ruleForm" label-width="100px">
+        <el-form-item label="题目分类">
           <el-select v-model="ruleTable.subjectId" filterable placeholder="请选择科目">
             <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"> </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="活动时间" required>
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker type="datetimerange" v-model="ruleTable.data1" style="width: 100%"></el-date-picker>
-            </el-form-item>
-          </el-col>
+        <el-form-item label="题目标题">
+          <el-input v-model="ruleTable.title"></el-input>
+        </el-form-item>
+        <el-form-item label="题目内容">
+          <el-input type="textarea" v-model="ruleTable.content"></el-input>
+        </el-form-item>
+        <el-form-item label="题目类型">
+          <el-select v-model="ruleTable.questionType" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="题目答案" v-if="ruleTable.questionType === 0 || ruleTable.questionType === 1">
+          <el-input type="textarea" v-model="ruleTable.optionA" size="mini"></el-input>
+          <el-input type="textarea" v-model="ruleTable.optionB" size="mini"></el-input>
+          <el-input type="textarea" v-model="ruleTable.optionC" size="mini"></el-input>
+          <el-input type="textarea" v-model="ruleTable.optionD" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="题目答案">
+          <el-input type="textarea" v-model="ruleTable.answer"></el-input>
+        </el-form-item>
+        <el-form-item label="题目解析">
+          <el-input type="textarea" v-model="ruleTable.parse"></el-input>
+        </el-form-item>
+        <el-form-item label="题目难度">
+          <el-radio-group v-model="ruleTable.difficulty">
+            <el-radio-button label="1"></el-radio-button>
+            <el-radio-button label="2"></el-radio-button>
+            <el-radio-button label="3"></el-radio-button>
+            <el-radio-button label="4"></el-radio-button>
+            <el-radio-button label="5"></el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="题目分数">
+          <el-input v-model="ruleTable.score" size="mini" style="width: 100px"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -129,7 +154,7 @@ export default {
         state: 1,
         subjectId: 1,
         subjectName: 'string',
-        title: 'string',
+        title: '',
         totalScore: 0,
         content: '',
         questionType: 0,
@@ -144,11 +169,24 @@ export default {
         optionD: ''
       },
       ruleTable: {
-        data1: [],
-        endTime: '',
-        startTime: '',
+        answerSwitch: true,
+        id: 1,
+        state: 1,
         subjectId: 1,
-        title: ''
+        subjectName: 'string',
+        title: '',
+        totalScore: 0,
+        content: '',
+        questionType: 0,
+        answer: 'A',
+        parse: 'String',
+        questionTypeName: '',
+        difficulty: 1,
+        score: 2,
+        optionA: '',
+        optionB: '',
+        optionC: '',
+        optionD: ''
       },
       options: [
         {
@@ -226,30 +264,20 @@ export default {
       this.getContents()
     },
     putContest() {
-      const startTime = new Date(this.ruleForm.data1[0]).getTime()
-      const endTime = new Date(this.ruleForm.data1[1]).getTime()
       axios({
-        method: 'put',
-        url: 'http://127.0.0.1:8088/contest/api/updateContest',
-        data: Object.assign(this.ruleForm, {
-          startTime,
-          endTime
-        })
+        method: 'post',
+        url: 'http://127.0.0.1:8088/question/api/updateQuestion',
+        data: this.ruleForm
       }).then((response) => {
         this.getContents()
         this.clearForm()
       })
     },
     addSubject() {
-      const startTime = new Date(this.ruleTable.data1[0]).getTime()
-      const endTime = new Date(this.ruleTable.data1[1]).getTime()
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:8088/contest/api/addContest',
-        data: Object.assign(this.ruleTable, {
-          startTime,
-          endTime
-        })
+        url: 'http://127.0.0.1:8088/question/api/addQuestion',
+        data:this.ruleTable
       }).then((response) => {
         this.getContents()
         this.clearTable()

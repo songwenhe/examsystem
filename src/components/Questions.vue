@@ -1,8 +1,12 @@
 <template>
   <div class="test-container">
     <el-divider><i class="el-icon-s-platform"></i>题目列表</el-divider>
-    <el-button size="mini" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
-    <el-table :data="tableData" style="width: 90%">
+    <div>
+      <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
+      <el-button class="el-icon-search" size="medium" @click="getUsers" style="position: absolute; top: 0px; right: 0px"></el-button>
+      <el-button size="medium" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
+    </div>
+    <el-table :data="tableData" style="width: 100%">
       <el-table-column label="题号" prop="id"></el-table-column>
       <el-table-column label="题目" prop="title"></el-table-column>
       <el-table-column label="课程" prop="subjectName"></el-table-column>
@@ -11,10 +15,6 @@
         <template slot-scope="scope"><el-rate v-model="scope.row.difficulty" disabled></el-rate></template>
       </el-table-column>
       <el-table-column align="right">
-        <template slot="header" slot-scope="scope">
-          <el-input v-model="query.keyword" size="mini" placeholder="输入关键字搜索" :key="scope.row" class="inputSearch" />
-          <el-button class="el-icon-search" size="mini" @click="getContents" style="position: absolute; top: 0px; right: 10px"></el-button>
-        </template>
         <template slot-scope="scope">
           <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
           <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
@@ -172,14 +172,14 @@ export default {
         answerSwitch: true,
         id: 1,
         state: 1,
-        subjectId: 1,
-        subjectName: 'string',
+        subjectId: '',
+        subjectName: '',
         title: '',
         totalScore: 0,
         content: '',
-        questionType: 0,
-        answer: 'A',
-        parse: 'String',
+        questionType: '',
+        answer: '',
+        parse: '',
         questionTypeName: '',
         difficulty: 1,
         score: 2,
@@ -249,7 +249,7 @@ export default {
                 message: '删除失败!'
               })
             }
-            this.getContents()
+            this.getQuestions()
           })
         })
         .catch(() => {
@@ -261,7 +261,7 @@ export default {
     },
     pageChange(res) {
       this.query.page = res
-      this.getContents()
+      this.getQuestions()
     },
     putContest() {
       axios({
@@ -269,7 +269,7 @@ export default {
         url: 'http://127.0.0.1:8088/question/api/updateQuestion',
         data: this.ruleForm
       }).then((response) => {
-        this.getContents()
+        this.getQuestions()
         this.clearForm()
       })
     },
@@ -277,9 +277,9 @@ export default {
       axios({
         method: 'post',
         url: 'http://127.0.0.1:8088/question/api/addQuestion',
-        data:this.ruleTable
+        data: this.ruleTable
       }).then((response) => {
-        this.getContents()
+        this.getQuestions()
         this.clearTable()
       })
     },
@@ -287,30 +287,46 @@ export default {
       this.dialogFormVisible = false
     },
     clearTable() {
-      this.ruleTable.title = ''
-      this.ruleTable.id = 1
-      this.dialogTableVisible = false
+      answerSwitch: true,
+        (this.ruleTable.id = 1),
+        (this.ruleTable.state = 1),
+        (this.ruleTable.subjectId = ''),
+        (this.subjectName = ''),
+        (this.ruleTable.title = ''),
+        (this.ruleTable.totalScore = 0),
+        (this.ruleTable.content = ''),
+        (this.ruleTable.questionType = ''),
+        (this.ruleTable.answer = ''),
+        (this.ruleTable.parse = ''),
+        (this.ruleTable.questionTypeName = ''),
+        (this.ruleTable.difficulty = 1),
+        (this.ruleTable.score = 2),
+        (this.ruleTable.optionA = ''),
+        (this.ruleTable.optionB = ''),
+        (this.ruleTable.optionC = ''),
+        (this.ruleTable.optionD = '')
     },
     handleEdit(index, row) {
       // console.log(index, row)
       this.tableData1 = row
       this.dialogFormVisible = true
-      this.ruleForm.title = row.title
-      this.ruleForm.subjectName = row.subjectName
-      this.ruleForm.id = row.id
-      this.ruleForm.state = row.state
-      this.ruleForm.totalScore = row.totalScore
-      this.ruleForm.subjectId = row.subjectId
-      this.ruleForm.content = row.content
-      this.ruleForm.questionType = row.questionType
-      this.ruleForm.answer = row.answer
-      this.ruleForm.parse = row.parse
-      this.ruleForm.difficulty = row.difficulty
-      this.ruleForm.score = row.score
-      this.ruleForm.optionA = row.optionA
-      this.ruleForm.optionB = row.optionB
-      this.ruleForm.optionC = row.optionC
-      this.ruleForm.optionD = row.optionD
+      this.ruleForm = row
+      // this.ruleForm.title = row.title
+      // this.ruleForm.subjectName = row.subjectName
+      // this.ruleForm.id = row.id
+      // this.ruleForm.state = row.state
+      // this.ruleForm.totalScore = row.totalScore
+      // this.ruleForm.subjectId = row.subjectId
+      // this.ruleForm.content = row.content
+      // this.ruleForm.questionType = row.questionType
+      // this.ruleForm.answer = row.answer
+      // this.ruleForm.parse = row.parse
+      // this.ruleForm.difficulty = row.difficulty
+      // this.ruleForm.score = row.score
+      // this.ruleForm.optionA = row.optionA
+      // this.ruleForm.optionB = row.optionB
+      // this.ruleForm.optionC = row.optionC
+      // this.ruleForm.optionD = row.optionD
     },
     subjectName(id) {
       // console.log(id)
@@ -319,7 +335,7 @@ export default {
       if (subject !== undefined) return subject.name
       else return '综合实训'
     },
-    getContents() {
+    getQuestions() {
       axios({
         method: 'get',
         url: 'http://127.0.0.1:8088/question/api/pageQuestion',
@@ -354,7 +370,7 @@ export default {
         url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
       }).then((response) => {
         this.pageSubjects = response.data.list
-        this.getContents()
+        this.getQuestions()
       })
     },
     getQuestionType(type) {
@@ -373,7 +389,7 @@ export default {
 <style lang="less" scoped>
 .addSubject {
   position: absolute;
-  top: 159px;
-  right: 113px;
+  top: 147px;
+  left: 530px;
 }
 </style>

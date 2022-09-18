@@ -41,11 +41,11 @@
               <i class="el-icon-document"></i>
               <span slot="title">科目管理</span>
             </el-menu-item>
-            <el-menu-item index="4">
+            <el-menu-item index="_grades">
               <i class="el-icon-setting"></i>
               <span slot="title">成绩管理</span>
             </el-menu-item>
-            <el-menu-item index="5">
+            <el-menu-item index="_user">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </el-menu-item>
@@ -62,7 +62,7 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main>
+        <el-main width="100%">
           <router-view></router-view>
         </el-main>
       </el-container>

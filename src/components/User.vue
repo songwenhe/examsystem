@@ -1,38 +1,56 @@
 <template>
   <div class="test-container">
-    <el-divider><i class="el-icon-s-platform"></i>考试列表</el-divider>
+    <el-divider><i class="el-icon-s-platform"></i>考试列表111</el-divider>
     <div>
       <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
-      <el-button class="el-icon-search" size="medium" @click="getContents()" style="position: absolute; top: 0px; right: 0px"></el-button>
+      <el-button class="el-icon-search" size="medium" @click="getUsers" style="position: absolute; top: 0px; right: 0px"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
     </div>
-    <el-table :data="tableData" style="width: 90%">
-      <el-table-column label="考试名称" prop="title"></el-table-column>
-      <el-table-column label="开始时间" prop="startTime"></el-table-column>
-      <el-table-column label="结束时间" prop="endTime"></el-table-column>
-      <el-table-column label="考试科目" prop="subjectName"> </el-table-column>
-      <el-table-column label="当前状态" prop="state">
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column label="头像" prop="avatarImgUrl">
         <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper" v-if="scope.row.state === 1">
-            <el-tag>未开始</el-tag>
+          <img :src="scope.row.avatarImgUrl" />
+        </template>
+      </el-table-column>
+      <el-table-column label="姓名" prop="name"></el-table-column>
+      <el-table-column label="账号" prop="username"></el-table-column>
+      <el-table-column label="QQ" prop="qq"></el-table-column>
+      <el-table-column label="手机" prop="phone"> </el-table-column>
+      <el-table-column label="邮箱" prop="email"> </el-table-column>
+      <el-table-column label="身份" prop="level">
+        <template slot-scope="scope">
+          <div slot="reference" class="name-wrapper" v-if="scope.row.level === 0">
+            <el-tag>学生</el-tag>
           </div>
-          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 2">
-            <el-tag type="success">进行中</el-tag>
+          <div slot="reference" class="name-wrapper" v-else-if="scope.row.level === 1">
+            <el-tag type="success">教师</el-tag>
           </div>
-          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 3">
-            <el-tag type="danger">已结束</el-tag>
+          <div slot="reference" class="name-wrapper" v-else-if="scope.row.level === 2">
+            <el-tag type="danger">管理员</el-tag>
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" prop="state">
+        <template slot-scope="scope">
+          <el-switch
+            style="display: block"
+            v-model="scope.row.state"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            width="30"
+            active-text="按月付费"
+            inactive-text="按年付费"
+          >
+          </el-switch>
         </template>
       </el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
           <el-button size="medium" type="success" icon="el-icon-search" circle></el-button>
           <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <el-pagination
       @current-change="pageChange"
       :page-size="query.size"
@@ -52,6 +70,7 @@
           <el-select v-model="ruleForm.subjectId" filterable placeholder="请选择科目">
             <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
+          {{ ruleForm.subjectId }}{{ ruleForm.id }}
         </el-form-item>
         <el-form-item label="活动时间" required>
           <el-col :span="11">
@@ -99,11 +118,10 @@ const axios = require('axios')
 
 export default {
   created() {
-    this.getSubjects()
+    this.getUsers()
   },
   data() {
     return {
-      scope: '考试名称',
       tableData: [],
       pageSubjects: [],
       total: 0,
@@ -117,35 +135,18 @@ export default {
         id: 1,
         startTime: '',
         state: 1,
-        subjectId: '',
+        subjectId: 1,
         subjectName: 'string',
         title: 'string',
         totalScore: 0
       },
       ruleTable: {
         data1: [],
-        title: '',
         endTime: '',
-        id: 1,
         startTime: '',
-        state: 1,
-        subjectId: '',
-        subjectName: 'string',
-        title: 'string',
-        totalScore: 0
+        subjectId: 1,
+        title: ''
       },
-      // rules: {
-      //   name: [
-      //     { required: true, message: '考试名称', trigger: 'blur' },
-      //     { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      //   ],
-      //   region: [{ required: true, message: '请选择活动区域', trigger: 'change' }],
-      //   date1: [{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }],
-      //   date2: [{ type: 'date', required: true, message: '请选择时间', trigger: 'change' }],
-      //   type: [{ type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }],
-      //   resource: [{ required: true, message: '请选择活动资源', trigger: 'change' }],
-      //   desc: [{ required: true, message: '请填写活动形式', trigger: 'blur' }]
-      // },
       query: {
         size: 10,
         page: 1,
@@ -177,7 +178,7 @@ export default {
                 message: '删除失败!'
               })
             }
-            this.getContents()
+            this.getUsers()
           })
         })
         .catch(() => {
@@ -189,7 +190,7 @@ export default {
     },
     pageChange(res) {
       this.query.page = res
-      this.getContents()
+      this.getUsers()
     },
     putContest() {
       const startTime = new Date(this.ruleForm.data1[0]).getTime()
@@ -202,7 +203,7 @@ export default {
           endTime
         })
       }).then((response) => {
-        this.getContents()
+        this.getUsers()
         this.clearForm()
       })
     },
@@ -217,7 +218,7 @@ export default {
           endTime
         })
       }).then((response) => {
-        this.getContents()
+        this.getUsers()
         this.clearTable()
       })
     },
@@ -235,14 +236,13 @@ export default {
       // console.log(index, row)
       this.tableData1 = row
       this.dialogFormVisible = true
-      this.ruleForm = row
       this.ruleForm.data1.push(row.startTime, row.endTime)
-      // this.ruleForm.title = row.title
-      // this.ruleForm.subjectName = row.subjectName
-      // this.ruleForm.id = row.id
-      // this.ruleForm.state = row.state
-      // this.ruleForm.totalScore = row.totalScore
-      // this.ruleForm.subjectId = row.subjectId
+      this.ruleForm.title = row.title
+      this.ruleForm.subjectName = row.subjectName
+      this.ruleForm.id = row.id
+      this.ruleForm.state = row.state
+      this.ruleForm.totalScore = row.totalScore
+      this.ruleForm.subjectId = row.subjectId
       // axios({
       //   method: 'put',
       //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
@@ -266,49 +266,19 @@ export default {
       res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
       return res
     },
-    subjectName(id) {
-      // console.log(id)
-      // console.log(this.pageSubjects)
-      let subject = this.pageSubjects.find((item) => id === item.id)
-      if (subject !== undefined) return subject.name
-      else return '综合实训'
-    },
-    getContents() {
+    getUsers() {
       axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/contest/api/pageContest',
-        params: this.query
+        method: 'post',
+        url: 'http://127.0.0.1:8088/account/pageAccount',
+        data: this.query
       }).then((response) => {
-        /* this.tableData = response.data.list
-        this.tableData.forEach((item) => {
-          item.startTime = this.handleTime(item.startTime)
-          item.endTime = this.handleTime(item.endTime)
-          item.subjectId = this.subjectName(item.subjectId)
-          // console.log(Data.subjectName(item.subjectId))
-        }) */
         this.total = response.data.total
         this.tableData = response.data.list.map((item) => {
-          /*  return {
+          return {
             ...item,
-            startTime: this.handleTime(item.startTime),
-            endTime: this.handleTime(item.endTime),
-            subjectId: this.subjectName(item.subjectId)
-          } */
-          return Object.assign(item, {
-            startTime: this.handleTime(item.startTime),
-            endTime: this.handleTime(item.endTime),
-            subjectName: this.subjectName(item.subjectId)
-          })
+            avatarImgUrl: '127.0.0.1:8088/' + item.avatarImgUrl
+          }
         })
-      })
-    },
-    getSubjects() {
-      axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
-      }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getContents()
       })
     }
   }

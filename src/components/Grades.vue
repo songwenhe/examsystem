@@ -3,25 +3,31 @@
     <el-divider><i class="el-icon-s-platform"></i>考试列表</el-divider>
     <div>
       <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
-      <el-button class="el-icon-search" size="medium" @click="getSubjects()" style="position: absolute; top: 0px; right: 0px"></el-button>
+      <el-button class="el-icon-search" size="medium" @click="getUsers" style="position: absolute; top: 0px; right: 0px"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
     </div>
     <el-table :data="tableData" style="width: 90%">
-      <el-table-column label="#" prop="id"></el-table-column>
-      <el-table-column label="课程名称" prop="name"></el-table-column>
-      <el-table-column label="创建时间" prop="createTime"></el-table-column>
-      <el-table-column label="更新时间" prop="updateTime"></el-table-column>
-      <el-table-column label="题目数量" prop="questionNum">
+      <el-table-column label="考试名称" prop="title"></el-table-column>
+      <el-table-column label="开始时间" prop="startTime"></el-table-column>
+      <el-table-column label="结束时间" prop="endTime"></el-table-column>
+      <el-table-column label="考试科目" prop="subjectName"> </el-table-column>
+      <el-table-column label="当前状态" prop="state">
         <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <el-tag type="success">{{ scope.row.questionNum }}</el-tag>
+          <div slot="reference" class="name-wrapper" v-if="scope.row.state === 1">
+            <el-tag>未开始</el-tag>
+          </div>
+          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 2">
+            <el-tag type="success">进行中</el-tag>
+          </div>
+          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 3">
+            <el-tag type="danger">已结束</el-tag>
           </div>
         </template>
       </el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
+          <el-button size="medium" type="success" icon="el-icon-search" circle></el-button>
           <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,40 +44,46 @@
 
     <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="课程名称">
-          <el-input v-model="ruleForm.name"></el-input>
-          <el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8088/uploadfile"
-            name="files"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess1"
-          >
-            <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
+        <el-form-item label="考试名称">
+          <el-input v-model="ruleForm.title"></el-input>
+        </el-form-item>
+        <el-form-item label="考试科目">
+          <el-select v-model="ruleForm.subjectId" filterable placeholder="请选择科目">
+            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+          {{ ruleForm.subjectId }}{{ ruleForm.id }}
+        </el-form-item>
+        <el-form-item label="活动时间" required>
+          <el-col :span="11">
+            <el-form-item>
+              <el-date-picker type="datetimerange" v-model="ruleForm.data1" style="width: 100%"></el-date-picker>
+            </el-form-item>
+          </el-col>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="clearForm">取 消</el-button>
-        <el-button type="primary" @click="updateSubject">修改</el-button>
+        <el-button type="primary" @click="putContest">修改</el-button>
       </div>
     </el-dialog>
 
     <el-dialog :visible.sync="dialogTableVisible" @close="clearTable">
       <el-form :model="ruleTable" label-width="100px">
-        <el-form-item label="课程名称">
-          <el-input v-model="ruleTable.name"></el-input>
-          <el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8088/uploadfile"
-            name="files"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess2"
-          >
-            <img v-if="ruleTable.imageUrl" :src="ruleTable.imageUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
+        <el-form-item label="考试名称">
+          <el-input v-model="ruleTable.title"></el-input>
+        </el-form-item>
+        <el-form-item label="考试科目">
+          <el-select v-model="ruleTable.subjectId" filterable placeholder="请选择科目">
+            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+          </el-select>
+          {{ ruleTable.subjectId }}{{ ruleTable.id }}
+        </el-form-item>
+        <el-form-item label="活动时间" required>
+          <el-col :span="11">
+            <el-form-item>
+              <el-date-picker type="datetimerange" v-model="ruleTable.data1" style="width: 100%"></el-date-picker>
+            </el-form-item>
+          </el-col>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -87,7 +99,7 @@ const axios = require('axios')
 
 export default {
   created() {
-    this.allSubjects()
+    this.getSubjects()
   },
   data() {
     return {
@@ -99,19 +111,24 @@ export default {
       dialogFormVisible: false,
       tableData1: {},
       ruleForm: {
+        data1: [],
+        title: '',
+        endTime: '',
         id: 1,
-        name: '',
-        imgUrl: '',
-        imageUrl: '',
-        dialogVisible: false
+        startTime: '',
+        state: 1,
+        subjectId: 1,
+        subjectName: 'string',
+        title: 'string',
+        totalScore: 0
       },
       ruleTable: {
-        name: '',
-        imgUrl: '',
-        imageUrl: '',
-        dialogVisible: false
+        data1: [],
+        endTime: '',
+        startTime: '',
+        subjectId: 1,
+        title: ''
       },
-      disabled: false,
       // rules: {
       //   name: [
       //     { required: true, message: '考试名称', trigger: 'blur' },
@@ -132,15 +149,6 @@ export default {
     }
   },
   methods: {
-    handleAvatarSuccess1(res, file) {
-      this.ruleForm.imgUrl = file.name
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
-    },
-    handleAvatarSuccess2(res, file) {
-      this.ruleTable.imgUrl = file.name
-      this.ruleTable.imageUrl = URL.createObjectURL(file.raw)
-      console.log(this.ruleTable.imgUrl)
-    },
     openDel(index, row) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -151,7 +159,7 @@ export default {
         .then(() => {
           axios({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/subject/api/deleteSubject/' + row.id
+            url: 'http://127.0.0.1:8088/contest/api/deleteContest/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -164,7 +172,7 @@ export default {
                 message: '删除失败!'
               })
             }
-            this.getSubjects()
+            this.getContents()
           })
         })
         .catch(() => {
@@ -176,41 +184,59 @@ export default {
     },
     pageChange(res) {
       this.query.page = res
-      this.getSubjects()
+      this.getContents()
     },
-    updateSubject() {
+    putContest() {
+      const startTime = new Date(this.ruleForm.data1[0]).getTime()
+      const endTime = new Date(this.ruleForm.data1[1]).getTime()
       axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/updateSubject',
-        data: this.ruleForm
+        method: 'put',
+        url: 'http://127.0.0.1:8088/contest/api/updateContest',
+        data: Object.assign(this.ruleForm, {
+          startTime,
+          endTime
+        })
       }).then((response) => {
-        this.getSubjects()
+        this.getContents()
         this.clearForm()
       })
     },
     addSubject() {
+      const startTime = new Date(this.ruleTable.data1[0]).getTime()
+      const endTime = new Date(this.ruleTable.data1[1]).getTime()
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/addSubject',
-        data: this.ruleTable
+        url: 'http://127.0.0.1:8088/contest/api/addContest',
+        data: Object.assign(this.ruleTable, {
+          startTime,
+          endTime
+        })
       }).then((response) => {
-        this.getSubjects()
+        this.getContents()
         this.clearTable()
       })
     },
     clearForm() {
+      this.ruleForm.data1 = []
       this.dialogFormVisible = false
     },
     clearTable() {
+      this.ruleTable.data1 = []
+      this.ruleTable.title = ''
+      this.ruleTable.id = 1
       this.dialogTableVisible = false
     },
     handleEdit(index, row) {
       // console.log(index, row)
       this.tableData1 = row
       this.dialogFormVisible = true
+      this.ruleForm.data1.push(row.startTime, row.endTime)
+      this.ruleForm.title = row.title
+      this.ruleForm.subjectName = row.subjectName
       this.ruleForm.id = row.id
-      this.ruleForm.name = row.name
-      this.ruleForm.imageUrl = 'http://127.0.0.1:8088/' + row.imgUrl
+      this.ruleForm.state = row.state
+      this.ruleForm.totalScore = row.totalScore
+      this.ruleForm.subjectId = row.subjectId
       // axios({
       //   method: 'put',
       //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
@@ -241,41 +267,42 @@ export default {
       if (subject !== undefined) return subject.name
       else return '综合实训'
     },
-    getSubjects() {
+    getContents() {
       axios({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects',
+        url: 'http://127.0.0.1:8088/contest/api/pageContest',
         params: this.query
       }).then((response) => {
         /* this.tableData = response.data.list
-          this.tableData.forEach((item) => {
-            item.startTime = this.handleTime(item.startTime)
-            item.endTime = this.handleTime(item.endTime)
-            item.subjectId = this.subjectName(item.subjectId)
-            // console.log(Data.subjectName(item.subjectId))
-          }) */
+        this.tableData.forEach((item) => {
+          item.startTime = this.handleTime(item.startTime)
+          item.endTime = this.handleTime(item.endTime)
+          item.subjectId = this.subjectName(item.subjectId)
+          // console.log(Data.subjectName(item.subjectId))
+        }) */
         this.total = response.data.total
         this.tableData = response.data.list.map((item) => {
           /*  return {
-              ...item,
-              startTime: this.handleTime(item.startTime),
-              endTime: this.handleTime(item.endTime),
-              subjectId: this.subjectName(item.subjectId)
-            } */
+            ...item,
+            startTime: this.handleTime(item.startTime),
+            endTime: this.handleTime(item.endTime),
+            subjectId: this.subjectName(item.subjectId)
+          } */
           return Object.assign(item, {
-            createTime: this.handleTime(item.createTime),
-            updateTime: this.handleTime(item.updateTime)
+            startTime: this.handleTime(item.startTime),
+            endTime: this.handleTime(item.endTime),
+            subjectName: this.subjectName(item.subjectId)
           })
         })
       })
     },
-    allSubjects() {
+    getSubjects() {
       axios({
         method: 'get',
         url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
       }).then((response) => {
         this.pageSubjects = response.data.list
-        this.getSubjects()
+        this.getContents()
       })
     }
   }
@@ -287,28 +314,5 @@ export default {
   position: absolute;
   top: 147px;
   left: 530px;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
 }
 </style>

@@ -8,7 +8,9 @@ const routes = [
   { path: '/', redirect: localStorage.getItem('index') },
   { path: '/_contests', component: Test },
   { path: '/_questions', component: Questions },
-  {path:'/_subjects',component:()=>import('@/components/Subjects')},
+  { path: '/_subjects', component: () => import('@/components/Subjects') },
+  { path: '/_grades', component: () => import('@/components/Grades.vue') },
+  { path: '/_user', component: () => import('@/components/User') },
   { path: '/demo', component: () => import('@/components/Demo') }
 ]
 

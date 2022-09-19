@@ -3,7 +3,7 @@
     <el-divider><i class="el-icon-s-platform"></i>考试列表</el-divider>
     <div>
       <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
-      <el-button class="el-icon-search" size="medium" @click="getUsers" style="position: absolute; top: 0px; right: 0px"></el-button>
+      <el-button class="el-icon-search" size="medium" @click="getContents()" style="position: absolute; top: 0px; right: 0px"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
     </div>
     <el-table :data="tableData" style="width: 90%">

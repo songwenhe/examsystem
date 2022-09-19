@@ -235,14 +235,13 @@ export default {
       // console.log(index, row)
       this.tableData1 = row
       this.dialogFormVisible = true
-      this.ruleForm = row
       this.ruleForm.data1.push(row.startTime, row.endTime)
-      // this.ruleForm.title = row.title
-      // this.ruleForm.subjectName = row.subjectName
-      // this.ruleForm.id = row.id
-      // this.ruleForm.state = row.state
-      // this.ruleForm.totalScore = row.totalScore
-      // this.ruleForm.subjectId = row.subjectId
+      this.ruleForm.title = row.title
+      this.ruleForm.subjectName = row.subjectName
+      this.ruleForm.id = row.id
+      this.ruleForm.state = row.state
+      this.ruleForm.totalScore = row.totalScore
+      this.ruleForm.subjectId = row.subjectId
       // axios({
       //   method: 'put',
       //   url: 'http://127.0.0.1:8088/contest/api/updateContest',

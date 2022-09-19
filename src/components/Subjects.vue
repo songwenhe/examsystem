@@ -2,9 +2,25 @@
   <div class="test-container">
     <el-divider><i class="el-icon-s-platform"></i>考试列表</el-divider>
     <div>
-      <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
-      <el-button class="el-icon-search" size="medium" @click="getSubjects()" style="position: absolute; top: 0px; right: 0px"></el-button>
-      <el-button size="medium" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
+      <el-input
+        v-model="query.keyword"
+        size="medium"
+        placeholder="输入关键字搜索"
+        class="inputSearch"
+        style="width: 300px"
+      />
+      <el-button
+        class="el-icon-search"
+        size="medium"
+        @click="getSubjects()"
+        style="position: absolute; top: 0px; right: 0px"
+      ></el-button>
+      <el-button
+        size="medium"
+        type="success"
+        @click="dialogTableVisible = true"
+        class="addSubject">添加考试</el-button
+      >
     </div>
     <el-table :data="tableData" style="width: 90%">
       <el-table-column label="#" prop="id"></el-table-column>
@@ -20,8 +36,20 @@
       </el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button
+            size="medium"
+            type="primary"
+            icon="el-icon-edit"
+            @click="handleEdit(scope.$index, scope.row)"
+            circle
+          ></el-button>
+          <el-button
+            size="medium"
+            type="danger"
+            icon="el-icon-delete"
+            @click="openDel(scope.$index, scope.row)"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,7 +75,11 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess1"
           >
-            <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" />
+            <img
+              v-if="ruleForm.imageUrl"
+              :src="ruleForm.imageUrl"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -69,7 +101,11 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess2"
           >
-            <img v-if="ruleTable.imageUrl" :src="ruleTable.imageUrl" class="avatar" />
+            <img
+              v-if="ruleTable.imageUrl"
+              :src="ruleTable.imageUrl"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -83,15 +119,15 @@
 </template>
 
 <script>
-const axios = require('axios')
+const axios = require("axios");
 
 export default {
   created() {
-    this.allSubjects()
+    this.allSubjects();
   },
   data() {
     return {
-      scope: '考试名称',
+      scope: "考试名称",
       tableData: [],
       pageSubjects: [],
       total: 0,
@@ -100,16 +136,16 @@ export default {
       tableData1: {},
       ruleForm: {
         id: 1,
-        name: '',
-        imgUrl: '',
-        imageUrl: '',
-        dialogVisible: false
+        name: "",
+        imgUrl: "",
+        imageUrl: "",
+        dialogVisible: false,
       },
       ruleTable: {
-        name: '',
-        imgUrl: '',
-        imageUrl: '',
-        dialogVisible: false
+        name: "",
+        imgUrl: "",
+        imageUrl: "",
+        dialogVisible: false,
       },
       disabled: false,
       // rules: {
@@ -127,90 +163,90 @@ export default {
       query: {
         size: 10,
         page: 1,
-        keyword: ''
-      }
-    }
+        keyword: "",
+      },
+    };
   },
   methods: {
     handleAvatarSuccess1(res, file) {
-      this.ruleForm.imgUrl = file.name
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
+      this.ruleForm.imgUrl = file.name;
+      this.ruleForm.imageUrl = URL.createObjectURL(file.raw);
     },
     handleAvatarSuccess2(res, file) {
-      this.ruleTable.imgUrl = file.name
-      this.ruleTable.imageUrl = URL.createObjectURL(file.raw)
-      console.log(this.ruleTable.imgUrl)
+      this.ruleTable.imgUrl = file.name;
+      this.ruleTable.imageUrl = URL.createObjectURL(file.raw);
+      console.log(this.ruleTable.imgUrl);
     },
     openDel(index, row) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        center: true
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true,
       })
         .then(() => {
           axios({
-            method: 'delete',
-            url: 'http://127.0.0.1:8088/subject/api/deleteSubject/' + row.id
+            method: "delete",
+            url: "http://127.0.0.1:8088/subject/api/deleteSubject/" + row.id,
           }).then((response) => {
             if (response.data.success) {
               this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+                type: "success",
+                message: "删除成功!",
+              });
             } else {
               this.$message({
-                type: 'warning',
-                message: '删除失败!'
-              })
+                type: "warning",
+                message: "删除失败!",
+              });
             }
-            this.getSubjects()
-          })
+            this.getSubjects();
+          });
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     pageChange(res) {
-      this.query.page = res
-      this.getSubjects()
+      this.query.page = res;
+      this.getSubjects();
     },
     updateSubject() {
       axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/updateSubject',
-        data: this.ruleForm
+        method: "post",
+        url: "http://127.0.0.1:8088/subject/api/updateSubject",
+        data: this.ruleForm,
       }).then((response) => {
-        this.getSubjects()
-        this.clearForm()
-      })
+        this.getSubjects();
+        this.clearForm();
+      });
     },
     addSubject() {
       axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/addSubject',
-        data: this.ruleTable
+        method: "post",
+        url: "http://127.0.0.1:8088/subject/api/addSubject",
+        data: this.ruleTable,
       }).then((response) => {
-        this.getSubjects()
-        this.clearTable()
-      })
+        this.getSubjects();
+        this.clearTable();
+      });
     },
     clearForm() {
-      this.dialogFormVisible = false
+      this.dialogFormVisible = false;
     },
     clearTable() {
-      this.dialogTableVisible = false
+      this.dialogTableVisible = false;
     },
     handleEdit(index, row) {
       // console.log(index, row)
-      this.tableData1 = row
-      this.dialogFormVisible = true
-      this.ruleForm.id = row.id
-      this.ruleForm.name = row.name
-      this.ruleForm.imageUrl = 'http://127.0.0.1:8088/' + row.imgUrl
+      this.tableData1 = row;
+      this.dialogFormVisible = true;
+      this.ruleForm.id = row.id;
+      this.ruleForm.name = row.name;
+      this.ruleForm.imageUrl = "http://127.0.0.1:8088/" + row.imgUrl;
       // axios({
       //   method: 'put',
       //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
@@ -218,34 +254,45 @@ export default {
       // })
     },
     handleTime(now) {
-      const time = new Date(now)
-      let res = ''
-      let year = time.getFullYear()
-      let month = time.getMonth() + 1
-      month = month > 9 ? month : '0' + month
-      let day = time.getDate()
-      day = day > 9 ? day : '0' + day
-      let hour = time.getHours()
-      hour = hour > 9 ? hour : '0' + hour
-      let minutes = time.getMinutes()
-      minutes = minutes > 9 ? minutes : '0' + minutes
-      let seconds = time.getSeconds()
-      seconds = seconds > 9 ? seconds : '0' + seconds
-      res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
-      return res
+      const time = new Date(now);
+      let res = "";
+      let year = time.getFullYear();
+      let month = time.getMonth() + 1;
+      month = month > 9 ? month : "0" + month;
+      let day = time.getDate();
+      day = day > 9 ? day : "0" + day;
+      let hour = time.getHours();
+      hour = hour > 9 ? hour : "0" + hour;
+      let minutes = time.getMinutes();
+      minutes = minutes > 9 ? minutes : "0" + minutes;
+      let seconds = time.getSeconds();
+      seconds = seconds > 9 ? seconds : "0" + seconds;
+      res =
+        year +
+        "-" +
+        month +
+        "-" +
+        day +
+        " " +
+        hour +
+        ":" +
+        minutes +
+        ":" +
+        seconds;
+      return res;
     },
     subjectName(id) {
       // console.log(id)
       // console.log(this.pageSubjects)
-      let subject = this.pageSubjects.find((item) => id === item.id)
-      if (subject !== undefined) return subject.name
-      else return '综合实训'
+      let subject = this.pageSubjects.find((item) => id === item.id);
+      if (subject !== undefined) return subject.name;
+      else return "综合实训";
     },
     getSubjects() {
       axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects',
-        params: this.query
+        method: "get",
+        url: "http://127.0.0.1:8088/subject/api/pageSubjects",
+        params: this.query,
       }).then((response) => {
         /* this.tableData = response.data.list
           this.tableData.forEach((item) => {
@@ -254,7 +301,7 @@ export default {
             item.subjectId = this.subjectName(item.subjectId)
             // console.log(Data.subjectName(item.subjectId))
           }) */
-        this.total = response.data.total
+        this.total = response.data.total;
         this.tableData = response.data.list.map((item) => {
           /*  return {
               ...item,
@@ -264,22 +311,22 @@ export default {
             } */
           return Object.assign(item, {
             createTime: this.handleTime(item.createTime),
-            updateTime: this.handleTime(item.updateTime)
-          })
-        })
-      })
+            updateTime: this.handleTime(item.updateTime),
+          });
+        });
+      });
     },
     allSubjects() {
       axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
+        method: "get",
+        url: "http://127.0.0.1:8088/subject/api/pageSubjects?size=999",
       }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getSubjects()
-      })
-    }
-  }
-}
+        this.pageSubjects = response.data.list;
+        this.getSubjects();
+      });
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

@@ -3,7 +3,7 @@
     <el-divider><i class="el-icon-s-platform"></i>题目列表</el-divider>
     <div>
       <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
-      <el-button class="el-icon-search" size="medium" @click="getUsers" style="position: absolute; top: 0px; right: 0px"></el-button>
+      <el-button class="el-icon-search" size="medium" @click="getQuestions()" style="position: absolute; top: 0px; right: 0px"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
@@ -125,7 +125,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="clearTable">取 消</el-button>
+        <el-button @click="clearTable">取消</el-button>
         <el-button type="primary" @click="addSubject">添加</el-button>
       </div>
     </el-dialog>

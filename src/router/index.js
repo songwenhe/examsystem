@@ -11,8 +11,8 @@ const routes = [
   { path: '/_subjects', component: () => import('@/components/Subjects') },
   { path: '/_grades', component: () => import('@/components/Grades.vue') },
   { path: '/_user', component: () => import('@/components/User') },
-  {path: '/_comments',component:()=>import('@/components/Comments')},
-  { path: '/demo', component: () => import('@/components/Demo') }
+  { path: '/_posts', component: () => import('@/components/Posts') },
+  { path: '/_comments', component: () => import('@/components/Comments') }
 ]
 
 const router = new VueRouter({

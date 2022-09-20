@@ -1,35 +1,37 @@
 <template>
   <div class="test-container">
     <div style="height: 50px; text-align: center">
-      <el-divider><i class="el-icon-s-platform"></i>科目列表</el-divider>
+      <el-divider><i class="el-icon-s-platform"></i>帖子列表</el-divider>
     </div>
-    <div style="height: 50px; text-align: center">
+    <div style="height: 60px">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>科目管理</el-breadcrumb-item>
-        <el-breadcrumb-item>科目列表</el-breadcrumb-item>
+        <el-breadcrumb-item>帖子管理</el-breadcrumb-item>
+        <el-breadcrumb-item>帖子列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div style="height: 50px">
+    <div style="height: 60px">
+      <el-select v-model="value" placeholder="请选择" size="medium" style="width: 100px">
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+      </el-select>
       <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
-      <el-button class="el-icon-search" size="medium" @click="getSubjects()"></el-button>
-      <el-button size="medium" type="success" @click="dialogTableVisible = true">添加科目</el-button>
+      <el-button class="el-icon-search" size="medium" @click="searchType(value)"></el-button>
     </div>
     <el-table :data="tableData" style="width: 90%" height="500px">
-      <el-table-column align="center" label="#" prop="id"></el-table-column>
-      <el-table-column align="center" label="课程名称" prop="name"></el-table-column>
+      <el-table-column align="center" label="标题" prop="title"></el-table-column>
+      <el-table-column align="center" label="发布者" prop="authorId"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime"></el-table-column>
-      <el-table-column align="center" label="更新时间" prop="updateTime"></el-table-column>
-      <el-table-column align="center" label="题目数量" prop="questionNum">
+      <el-table-column align="center" label="编辑时间" prop="updateTime"></el-table-column>
+      <el-table-column label="最后一次回复时间" prop="lastReplyTime"></el-table-column>
+      <el-table-column align="center" label="回帖数量" prop="replyNum">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <el-tag type="success">{{ scope.row.questionNum }}</el-tag>
+            <el-tag type="success">{{ scope.row.replyNum }}</el-tag>
           </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
           <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
         </template>
       </el-table-column>
@@ -44,50 +46,6 @@
       style="margin-left: 0px"
       :current-page="query.page"
     ></el-pagination>
-
-    <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="课程名称">
-          <el-input v-model="ruleForm.name"></el-input>
-          <el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8088/uploadfile"
-            name="files"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess1"
-          >
-            <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="clearForm">取 消</el-button>
-        <el-button type="primary" @click="updateSubject">修改</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="dialogTableVisible" @close="clearTable">
-      <el-form :model="ruleTable" label-width="100px">
-        <el-form-item label="课程名称">
-          <el-input v-model="ruleTable.name"></el-input>
-          <el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8088/uploadfile"
-            name="files"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess2"
-          >
-            <img v-if="ruleTable.imageUrl" :src="ruleTable.imageUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="clearTable">取 消</el-button>
-        <el-button type="primary" @click="addSubject">添加</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -96,7 +54,7 @@ const axios = require('axios')
 
 export default {
   created() {
-    this.allSubjects()
+    this.getPosts()
   },
   data() {
     return {
@@ -120,6 +78,17 @@ export default {
         imageUrl: '',
         dialogVisible: false
       },
+      options: [
+        {
+          value: 1,
+          label: '文章名'
+        },
+        {
+          value: 2,
+          label: '作者ID'
+        }
+      ],
+      value: 1,
       disabled: false,
       // rules: {
       //   name: [
@@ -141,14 +110,28 @@ export default {
     }
   },
   methods: {
-    handleAvatarSuccess1(res, file) {
-      this.ruleForm.imgUrl = file.name
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
+    searchType(value) {
+      if (value === 1) {
+        this.getPosts()
+      } else if (value === 2) {
+        this.pagePostByAuthorId()
+      }
     },
-    handleAvatarSuccess2(res, file) {
-      this.ruleTable.imgUrl = file.name
-      this.ruleTable.imageUrl = URL.createObjectURL(file.raw)
-      console.log(this.ruleTable.imgUrl)
+    pagePostByAuthorId() {
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8088/post/api/pagePostByAuthorId',
+        params: this.query
+      }).then((response) => {
+        this.total = response.data.total
+        this.tableData = response.data.list.map((item) => {
+          return Object.assign(item, {
+            createTime: this.handleTime(item.createTime),
+            updateTime: this.handleTime(item.updateTime),
+            lastReplyTime: this.handleTime(item.lastReplyTime)
+          })
+        })
+      })
     },
     openDel(index, row) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -160,7 +143,7 @@ export default {
         .then(() => {
           axios({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/subject/api/deleteSubject/' + row.id
+            url: 'http://127.0.0.1:8088/post/api/deletePost/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -173,7 +156,7 @@ export default {
                 message: '删除失败!'
               })
             }
-            this.getSubjects()
+            this.getPosts()
           })
         })
         .catch(() => {
@@ -185,46 +168,14 @@ export default {
     },
     pageChange(res) {
       this.query.page = res
-      this.getSubjects()
-    },
-    updateSubject() {
-      axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/updateSubject',
-        data: this.ruleForm
-      }).then((response) => {
-        this.getSubjects()
-        this.clearForm()
-      })
-    },
-    addSubject() {
-      axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/addSubject',
-        data: this.ruleTable
-      }).then((response) => {
-        this.getSubjects()
-        this.clearTable()
-      })
-    },
-    clearForm() {
-      this.dialogFormVisible = false
-    },
-    clearTable() {
-      this.dialogTableVisible = false
+      this.getPosts()
     },
     handleEdit(index, row) {
-      // console.log(index, row)
       this.tableData1 = row
       this.dialogFormVisible = true
       this.ruleForm.id = row.id
       this.ruleForm.name = row.name
       this.ruleForm.imageUrl = 'http://127.0.0.1:8088/' + row.imgUrl
-      // axios({
-      //   method: 'put',
-      //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
-      //   params: {}
-      // })
     },
     handleTime(now) {
       const time = new Date(now)
@@ -243,17 +194,10 @@ export default {
       res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
       return res
     },
-    subjectName(id) {
-      // console.log(id)
-      // console.log(this.pageSubjects)
-      let subject = this.pageSubjects.find((item) => id === item.id)
-      if (subject !== undefined) return subject.name
-      else return '综合实训'
-    },
-    getSubjects() {
+    getPosts() {
       axios({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects',
+        url: 'http://127.0.0.1:8088/post/api/pagePosts',
         params: this.query
       }).then((response) => {
         /* this.tableData = response.data.list
@@ -273,18 +217,10 @@ export default {
             } */
           return Object.assign(item, {
             createTime: this.handleTime(item.createTime),
-            updateTime: this.handleTime(item.updateTime)
+            updateTime: this.handleTime(item.updateTime),
+            lastReplyTime: this.handleTime(item.lastReplyTime)
           })
         })
-      })
-    },
-    allSubjects() {
-      axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
-      }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getSubjects()
       })
     }
   }

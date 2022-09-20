@@ -2,22 +2,62 @@
   <div class="test-container">
     <el-divider><i class="el-icon-s-platform"></i>题目列表</el-divider>
     <div>
-      <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
-      <el-button class="el-icon-search" size="medium" @click="getQuestions()" style="position: absolute; top: 0px; right: 0px"></el-button>
-      <el-button size="medium" type="success" @click="dialogTableVisible = true" class="addSubject">添加考试</el-button>
+      <el-input
+        v-model="query.keyword"
+        size="medium"
+        placeholder="输入关键字搜索"
+        class="inputSearch"
+        style="width: 300px"
+      />
+      <el-button
+        class="el-icon-search"
+        size="medium"
+        @click="getQuestions()"
+        style="position: absolute; top: 147px; left: 528px"
+      ></el-button>
+      <el-button
+        size="medium"
+        type="success"
+        @click="dialogTableVisible = true"
+        style="position: absolute; top: 147px; left: 575px"
+        >添加考试</el-button
+      >
     </div>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column label="题号" prop="id"></el-table-column>
-      <el-table-column label="题目" prop="title"></el-table-column>
-      <el-table-column label="课程" prop="subjectName"></el-table-column>
-      <el-table-column label="题型" prop="questionTypeName"> </el-table-column>
-      <el-table-column label="难度" prop="difficulty">
-        <template slot-scope="scope"><el-rate v-model="scope.row.difficulty" disabled></el-rate></template>
+    <el-table :data="tableData" style="width: 90%">
+      <el-table-column align="center" label="题号" prop="id"></el-table-column>
+      <el-table-column
+        align="center"
+        label="题目"
+        prop="title"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        label="课程"
+        prop="subjectName"
+      ></el-table-column>
+      <el-table-column align="center" label="题型" prop="questionTypeName">
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="center" label="难度" prop="difficulty">
+        <template slot-scope="scope"
+          ><el-rate v-model="scope.row.difficulty" disabled></el-rate
+        ></template>
+      </el-table-column>
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button
+            size="medium"
+            type="primary"
+            icon="el-icon-edit"
+            @click="handleEdit(scope.$index, scope.row)"
+            circle
+          ></el-button>
+          <el-button
+            size="medium"
+            type="danger"
+            icon="el-icon-delete"
+            @click="openDel(scope.$index, scope.row)"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -35,8 +75,18 @@
     <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="ruleForm" label-width="100px">
         <el-form-item label="题目分类">
-          <el-select v-model="ruleForm.subjectId" filterable placeholder="请选择科目">
-            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+          <el-select
+            v-model="ruleForm.subjectId"
+            filterable
+            placeholder="请选择科目"
+          >
+            <el-option
+              v-for="item in pageSubjects"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="题目标题">
@@ -47,14 +97,39 @@
         </el-form-item>
         <el-form-item label="题目类型">
           <el-select v-model="ruleForm.questionType" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="题目答案" v-if="ruleForm.questionType === 0 || ruleForm.questionType === 1">
-          <el-input type="textarea" v-model="ruleForm.optionA" size="mini"></el-input>
-          <el-input type="textarea" v-model="ruleForm.optionB" size="mini"></el-input>
-          <el-input type="textarea" v-model="ruleForm.optionC" size="mini"></el-input>
-          <el-input type="textarea" v-model="ruleForm.optionD" size="mini"></el-input>
+        <el-form-item
+          label="题目答案"
+          v-if="ruleForm.questionType === 0 || ruleForm.questionType === 1"
+        >
+          <el-input
+            type="textarea"
+            v-model="ruleForm.optionA"
+            size="mini"
+          ></el-input>
+          <el-input
+            type="textarea"
+            v-model="ruleForm.optionB"
+            size="mini"
+          ></el-input>
+          <el-input
+            type="textarea"
+            v-model="ruleForm.optionC"
+            size="mini"
+          ></el-input>
+          <el-input
+            type="textarea"
+            v-model="ruleForm.optionD"
+            size="mini"
+          ></el-input>
         </el-form-item>
         <el-form-item label="题目答案">
           <el-input type="textarea" v-model="ruleForm.answer"></el-input>
@@ -72,7 +147,11 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="题目分数">
-          <el-input v-model="ruleForm.score" size="mini" style="width: 100px"></el-input>
+          <el-input
+            v-model="ruleForm.score"
+            size="mini"
+            style="width: 100px"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -84,8 +163,18 @@
     <el-dialog :visible.sync="dialogTableVisible" @close="clearTable">
       <el-form :model="ruleForm" label-width="100px">
         <el-form-item label="题目分类">
-          <el-select v-model="ruleTable.subjectId" filterable placeholder="请选择科目">
-            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+          <el-select
+            v-model="ruleTable.subjectId"
+            filterable
+            placeholder="请选择科目"
+          >
+            <el-option
+              v-for="item in pageSubjects"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="题目标题">
@@ -96,14 +185,39 @@
         </el-form-item>
         <el-form-item label="题目类型">
           <el-select v-model="ruleTable.questionType" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="题目答案" v-if="ruleTable.questionType === 0 || ruleTable.questionType === 1">
-          <el-input type="textarea" v-model="ruleTable.optionA" size="mini"></el-input>
-          <el-input type="textarea" v-model="ruleTable.optionB" size="mini"></el-input>
-          <el-input type="textarea" v-model="ruleTable.optionC" size="mini"></el-input>
-          <el-input type="textarea" v-model="ruleTable.optionD" size="mini"></el-input>
+        <el-form-item
+          label="题目答案"
+          v-if="ruleTable.questionType === 0 || ruleTable.questionType === 1"
+        >
+          <el-input
+            type="textarea"
+            v-model="ruleTable.optionA"
+            size="mini"
+          ></el-input>
+          <el-input
+            type="textarea"
+            v-model="ruleTable.optionB"
+            size="mini"
+          ></el-input>
+          <el-input
+            type="textarea"
+            v-model="ruleTable.optionC"
+            size="mini"
+          ></el-input>
+          <el-input
+            type="textarea"
+            v-model="ruleTable.optionD"
+            size="mini"
+          ></el-input>
         </el-form-item>
         <el-form-item label="题目答案">
           <el-input type="textarea" v-model="ruleTable.answer"></el-input>
@@ -121,7 +235,11 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="题目分数">
-          <el-input v-model="ruleTable.score" size="mini" style="width: 100px"></el-input>
+          <el-input
+            v-model="ruleTable.score"
+            size="mini"
+            style="width: 100px"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -133,15 +251,15 @@
 </template>
 
 <script>
-const axios = require('axios')
+const axios = require("axios");
 
 export default {
   created() {
-    this.getSubjects()
+    this.getSubjects();
   },
   data() {
     return {
-      scope: '考试名称',
+      scope: "考试名称",
       tableData: [],
       pageSubjects: [],
       total: 0,
@@ -153,58 +271,58 @@ export default {
         id: 1,
         state: 1,
         subjectId: 1,
-        subjectName: 'string',
-        title: '',
+        subjectName: "string",
+        title: "",
         totalScore: 0,
-        content: '',
+        content: "",
         questionType: 0,
-        answer: 'A',
-        parse: 'String',
-        questionTypeName: '',
+        answer: "A",
+        parse: "String",
+        questionTypeName: "",
         difficulty: 1,
         score: 2,
-        optionA: '',
-        optionB: '',
-        optionC: '',
-        optionD: ''
+        optionA: "",
+        optionB: "",
+        optionC: "",
+        optionD: "",
       },
       ruleTable: {
         answerSwitch: true,
         id: 1,
         state: 1,
-        subjectId: '',
-        subjectName: '',
-        title: '',
+        subjectId: "",
+        subjectName: "",
+        title: "",
         totalScore: 0,
-        content: '',
-        questionType: '',
-        answer: '',
-        parse: '',
-        questionTypeName: '',
+        content: "",
+        questionType: "",
+        answer: "",
+        parse: "",
+        questionTypeName: "",
         difficulty: 1,
         score: 2,
-        optionA: '',
-        optionB: '',
-        optionC: '',
-        optionD: ''
+        optionA: "",
+        optionB: "",
+        optionC: "",
+        optionD: "",
       },
       options: [
         {
           value: 0,
-          label: '单选题'
+          label: "单选题",
         },
         {
           value: 1,
-          label: '多选题'
+          label: "多选题",
         },
         {
           value: 2,
-          label: '问答题'
+          label: "问答题",
         },
         {
           value: 3,
-          label: '编程题'
-        }
+          label: "编程题",
+        },
       ],
       // rules: {
       //   name: [
@@ -221,96 +339,96 @@ export default {
       query: {
         size: 10,
         page: 1,
-        keyword: ''
-      }
-    }
+        keyword: "",
+      },
+    };
   },
   methods: {
     openDel(index, row) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        center: true
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true,
       })
         .then(() => {
           axios({
-            method: 'delete',
-            url: 'http://127.0.0.1:8088/question/api/deleteQuestion/' + row.id
+            method: "delete",
+            url: "http://127.0.0.1:8088/question/api/deleteQuestion/" + row.id,
           }).then((response) => {
             if (response.data.success) {
               this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+                type: "success",
+                message: "删除成功!",
+              });
             } else {
               this.$message({
-                type: 'warning',
-                message: '删除失败!'
-              })
+                type: "warning",
+                message: "删除失败!",
+              });
             }
-            this.getQuestions()
-          })
+            this.getQuestions();
+          });
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     pageChange(res) {
-      this.query.page = res
-      this.getQuestions()
+      this.query.page = res;
+      this.getQuestions();
     },
     putContest() {
       axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8088/question/api/updateQuestion',
-        data: this.ruleForm
+        method: "post",
+        url: "http://127.0.0.1:8088/question/api/updateQuestion",
+        data: this.ruleForm,
       }).then((response) => {
-        this.getQuestions()
-        this.clearForm()
-      })
+        this.getQuestions();
+        this.clearForm();
+      });
     },
     addSubject() {
       axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8088/question/api/addQuestion',
-        data: this.ruleTable
+        method: "post",
+        url: "http://127.0.0.1:8088/question/api/addQuestion",
+        data: this.ruleTable,
       }).then((response) => {
-        this.getQuestions()
-        this.clearTable()
-      })
+        this.getQuestions();
+        this.clearTable();
+      });
     },
     clearForm() {
-      this.dialogFormVisible = false
+      this.dialogFormVisible = false;
     },
     clearTable() {
       answerSwitch: true,
         (this.ruleTable.id = 1),
         (this.ruleTable.state = 1),
-        (this.ruleTable.subjectId = ''),
-        (this.subjectName = ''),
-        (this.ruleTable.title = ''),
+        (this.ruleTable.subjectId = ""),
+        (this.subjectName = ""),
+        (this.ruleTable.title = ""),
         (this.ruleTable.totalScore = 0),
-        (this.ruleTable.content = ''),
-        (this.ruleTable.questionType = ''),
-        (this.ruleTable.answer = ''),
-        (this.ruleTable.parse = ''),
-        (this.ruleTable.questionTypeName = ''),
+        (this.ruleTable.content = ""),
+        (this.ruleTable.questionType = ""),
+        (this.ruleTable.answer = ""),
+        (this.ruleTable.parse = ""),
+        (this.ruleTable.questionTypeName = ""),
         (this.ruleTable.difficulty = 1),
         (this.ruleTable.score = 2),
-        (this.ruleTable.optionA = ''),
-        (this.ruleTable.optionB = ''),
-        (this.ruleTable.optionC = ''),
-        (this.ruleTable.optionD = '')
+        (this.ruleTable.optionA = ""),
+        (this.ruleTable.optionB = ""),
+        (this.ruleTable.optionC = ""),
+        (this.ruleTable.optionD = "");
     },
     handleEdit(index, row) {
       // console.log(index, row)
-      this.tableData1 = row
-      this.dialogFormVisible = true
-      this.ruleForm = row
+      this.tableData1 = row;
+      this.dialogFormVisible = true;
+      this.ruleForm = row;
       // this.ruleForm.title = row.title
       // this.ruleForm.subjectName = row.subjectName
       // this.ruleForm.id = row.id
@@ -331,15 +449,15 @@ export default {
     subjectName(id) {
       // console.log(id)
       // console.log(this.pageSubjects)
-      let subject = this.pageSubjects.find((item) => id === item.id)
-      if (subject !== undefined) return subject.name
-      else return '综合实训'
+      let subject = this.pageSubjects.find((item) => id === item.id);
+      if (subject !== undefined) return subject.name;
+      else return "综合实训";
     },
     getQuestions() {
       axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/question/api/pageQuestion',
-        params: this.query
+        method: "get",
+        url: "http://127.0.0.1:8088/question/api/pageQuestion",
+        params: this.query,
       }).then((response) => {
         /* this.tableData = response.data.list
         this.tableData.forEach((item) => {
@@ -348,7 +466,7 @@ export default {
           item.subjectId = this.subjectName(item.subjectId)
           // console.log(Data.subjectName(item.subjectId))
         }) */
-        this.total = response.data.total
+        this.total = response.data.total;
         this.tableData = response.data.list.map((item) => {
           /*  return {
             ...item,
@@ -358,38 +476,33 @@ export default {
           } */
           return Object.assign(item, {
             subjectName: this.subjectName(item.subjectId),
-            questionTypeName: this.getQuestionType(item.questionType)
-          })
-        })
+            questionTypeName: this.getQuestionType(item.questionType),
+          });
+        });
         // console.log(this.tableData)
-      })
+      });
     },
     getSubjects() {
       axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
+        method: "get",
+        url: "http://127.0.0.1:8088/subject/api/pageSubjects?size=999",
       }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getQuestions()
-      })
+        this.pageSubjects = response.data.list;
+        this.getQuestions();
+      });
     },
     getQuestionType(type) {
       if (type === 0) {
-        return '单选题'
+        return "单选题";
       } else if (type === 1) {
-        return '多选题'
-      } else if (type === 2) return '问答题'
-      else if (type === 3) return '编程题'
-      else return '未知题型'
-    }
-  }
-}
+        return "多选题";
+      } else if (type === 2) return "问答题";
+      else if (type === 3) return "编程题";
+      else return "未知题型";
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-.addSubject {
-  position: absolute;
-  top: 147px;
-  left: 530px;
-}
 </style>

@@ -2,6 +2,21 @@
   <div class="test-container">
     <el-divider><i class="el-icon-s-platform"></i>考试列表</el-divider>
     <div>
+      <el-select
+        v-model="value"
+        placeholder="请选择"
+        size="medium"
+        style="width: 100px"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+
       <el-input
         v-model="query.keyword"
         size="medium"
@@ -12,23 +27,20 @@
       <el-button
         class="el-icon-search"
         size="medium"
-        @click="getSubjects()"
-        style="position: absolute; top: 147px; left: 528px"
+        @click="getComments()"
+        style="position: absolute; top: 147px; left: 628px"
       ></el-button>
-      <el-button
-        size="medium"
-        type="success"
-        @click="dialogTableVisible = true"
-        style="position: absolute; top: 147px; left: 575px"
-        >添加考试</el-button
-      >
     </div>
     <el-table :data="tableData" style="width: 90%">
-      <el-table-column align="center" label="#" prop="id"></el-table-column>
       <el-table-column
         align="center"
-        label="课程名称"
-        prop="name"
+        label="标题"
+        prop="title"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        label="发布者"
+        prop="authorId"
       ></el-table-column>
       <el-table-column
         align="center"
@@ -37,25 +49,22 @@
       ></el-table-column>
       <el-table-column
         align="center"
-        label="更新时间"
+        label="编辑时间"
         prop="updateTime"
       ></el-table-column>
-      <el-table-column align="center" label="题目数量" prop="questionNum">
+      <el-table-column
+        label="最后一次回复时间"
+        prop="lastReplyTime"
+      ></el-table-column>
+      <el-table-column align="center" label="回帖数量" prop="replyNum">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <el-tag type="success">{{ scope.row.questionNum }}</el-tag>
+            <el-tag type="success">{{ scope.row.replyNum }}</el-tag>
           </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button
-            size="medium"
-            type="primary"
-            icon="el-icon-edit"
-            @click="handleEdit(scope.$index, scope.row)"
-            circle
-          ></el-button>
           <el-button
             size="medium"
             type="danger"
@@ -98,7 +107,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="clearForm">取 消</el-button>
+        <el-button @click="clearForm">取消</el-button>
         <el-button type="primary" @click="updateSubject">修改</el-button>
       </div>
     </el-dialog>
@@ -124,7 +133,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="clearTable">取 消</el-button>
+        <el-button @click="clearTable">取消</el-button>
         <el-button type="primary" @click="addSubject">添加</el-button>
       </div>
     </el-dialog>
@@ -160,6 +169,17 @@ export default {
         imageUrl: "",
         dialogVisible: false,
       },
+      options: [
+        {
+          value: 1,
+          label: "文章名",
+        },
+        {
+          value: 2,
+          label: "作者ID",
+        },
+      ],
+      value: 1,
       disabled: false,
       // rules: {
       //   name: [
@@ -200,7 +220,7 @@ export default {
         .then(() => {
           axios({
             method: "delete",
-            url: "http://127.0.0.1:8088/subject/api/deleteSubject/" + row.id,
+            url: "http://127.0.0.1:8088/post/api/deletePost/" + row.id,
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -213,7 +233,7 @@ export default {
                 message: "删除失败!",
               });
             }
-            this.getSubjects();
+            this.getComments();
           });
         })
         .catch(() => {
@@ -225,7 +245,7 @@ export default {
     },
     pageChange(res) {
       this.query.page = res;
-      this.getSubjects();
+      this.getComments();
     },
     updateSubject() {
       axios({
@@ -233,7 +253,7 @@ export default {
         url: "http://127.0.0.1:8088/subject/api/updateSubject",
         data: this.ruleForm,
       }).then((response) => {
-        this.getSubjects();
+        this.getComments();
         this.clearForm();
       });
     },
@@ -243,7 +263,7 @@ export default {
         url: "http://127.0.0.1:8088/subject/api/addSubject",
         data: this.ruleTable,
       }).then((response) => {
-        this.getSubjects();
+        this.getComments();
         this.clearTable();
       });
     },
@@ -301,7 +321,7 @@ export default {
       if (subject !== undefined) return subject.name;
       else return "综合实训";
     },
-    getSubjects() {
+    getComments() {
       axios({
         method: "get",
         url: "http://127.0.0.1:8088/post/api/pagePosts",
@@ -322,11 +342,14 @@ export default {
               endTime: this.handleTime(item.endTime),
               subjectId: this.subjectName(item.subjectId)
             } */
+          console.log(item.lastReplyTime);
           return Object.assign(item, {
             createTime: this.handleTime(item.createTime),
             updateTime: this.handleTime(item.updateTime),
+            lastReplyTime: this.handleTime(item.lastReplyTime),
           });
         });
+        console.log(this.tableData);
       });
     },
     allSubjects() {
@@ -335,7 +358,7 @@ export default {
         url: "http://127.0.0.1:8088/subject/api/pageSubjects?size=999",
       }).then((response) => {
         this.pageSubjects = response.data.list;
-        this.getSubjects();
+        this.getComments();
       });
     },
   },

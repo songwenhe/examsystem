@@ -32,7 +32,9 @@
             class="el-menu-vertical-demo"
             @select="slt"
           >
-            <el-menu-item index="_contests"> <i class="el-icon-menu"></i><span slot="title">考试管理</span> </el-menu-item>
+            <el-menu-item index="_contests">
+              <i class="el-icon-menu"></i><span slot="title">考试管理</span>
+            </el-menu-item>
             <el-menu-item index="_questions">
               <i class="el-icon-location"></i>
               <span slot="title">题目管理</span>
@@ -49,7 +51,7 @@
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </el-menu-item>
-            <el-menu-item index="6">
+            <el-menu-item index="_comments">
               <i class="el-icon-location"></i>
               <span>帖子管理</span>
             </el-menu-item>
@@ -74,20 +76,20 @@ export default {
   data() {
     return {
       isCollapse: false,
-      index: '_contests'
-    }
+      index: "_contests",
+    };
   },
   created() {
-    this.index = localStorage.getItem('index')
+    this.index = localStorage.getItem("index");
     // console.log(this.$route.fullPath)
   },
   methods: {
     slt(evt) {
-      localStorage.setItem('index', evt)
-      this.index = localStorage.getItem('index')
-    }
-  }
-}
+      localStorage.setItem("index", evt);
+      this.index = localStorage.getItem("index");
+    },
+  },
+};
 </script>
 <style lang="less">
 .el-header {

@@ -28,22 +28,18 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log(this.ruleForm)
       axios({
         method: 'post',
         url: 'http://127.0.0.1:8088/account/api/login',
         params: this.ruleForm
       }).then((response) => {
-        console.log(response)
         if (response.data.success) {
           this.$message({ message: '登录成功', type: 'success' })
-          console.log(response.data.data.level)
           if (response.data.data.level === 2) {
             this.$router.push('/_backstagepage')
           } else {
             this.$router.push('/_frontpage')
           }
-          console.log(this)
         } else {
           this.$message({ message: response.data.message, type: 'warning' })
         }

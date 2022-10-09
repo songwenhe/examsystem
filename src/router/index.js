@@ -19,7 +19,15 @@ const routes = [
       { path: '/_comments', component: () => import('@/components/backstages/Comments') }
     ]
   },
-  { path: '/_frontpage', component: () => import('@/components/Frontpage') }
+  {
+    path: '/_frontpage',
+    component: () => import('@/components/Frontpage'),
+    redirect: '/index',
+    children: [
+      { path: '/index', component: () => import('@/components/fronts/Index') },
+      { path: '/contest', component: () => import('@/components/fronts/contest') }
+    ]
+  }
 ]
 
 const router = new VueRouter({

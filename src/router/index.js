@@ -25,7 +25,9 @@ const routes = [
     redirect: '/index',
     children: [
       { path: '/index', component: () => import('@/components/fronts/Index') },
-      { path: '/contest', component: () => import('@/components/fronts/contest') }
+      { path: '/contest', component: () => import('@/components/fronts/Contest') },
+      { path: '/subject', component: () => import('@/components/fronts/Sub') },
+      { path: '/share', component: () => import('@/components/fronts/Share') }
     ]
   }
 ]

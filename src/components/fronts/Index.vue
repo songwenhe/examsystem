@@ -7,12 +7,12 @@
         <h4>考试</h4>
         <p>即使是正规的教学考试，也能轻松应对，准确评判</p>
       </router-link>
-      <router-link class="box" to="/contest"
+      <router-link class="box" to="/subject"
         ><i class="el-icon-s-order iconfont"></i>
         <h4>题库</h4>
         <p>适合教学使用的题目，合理的题目分类</p>
       </router-link>
-      <router-link class="box" to="/contest"
+      <router-link class="box" to="/share"
         ><i class="el-icon-chat-line-round iconfont"></i>
         <h4>社区</h4>
         <p>在这里同学可以分享自己的学习体验，解答疑惑</p>

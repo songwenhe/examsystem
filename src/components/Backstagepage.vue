@@ -98,14 +98,17 @@ export default {
   line-height: 60px;
   /* x 偏移量 | y 偏移量 | 阴影模糊半径 | 阴影扩散半径 | 阴影颜色 */
   box-shadow: 0px 3px 2px 2px rgba(0, 0, 0, 0.3);
+
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     height: 60px;
+
     li {
       flex: 1;
+
       img {
         height: 90%;
         float: left;
@@ -113,6 +116,7 @@ export default {
     }
   }
 }
+
 .el-main {
   padding: 20px;
 }
@@ -120,16 +124,19 @@ export default {
 body > .el-container {
   margin-bottom: 40px;
 }
+
 #backstagepage {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
 .el-dropdown-link {
   cursor: pointer;
   color: #409eff;
 }
+
 .el-icon-arrow-down {
   font-size: 12px;
 }

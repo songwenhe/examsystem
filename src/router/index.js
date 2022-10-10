@@ -24,10 +24,19 @@ const routes = [
     component: () => import('@/components/Frontpage'),
     redirect: '/index',
     children: [
-      { path: '/index', component: () => import('@/components/fronts/Index') },
-      { path: '/contest', component: () => import('@/components/fronts/Contest') },
-      { path: '/subject', component: () => import('@/components/fronts/Sub') },
-      { path: '/share', component: () => import('@/components/fronts/Share') }
+      {
+        path: '/index',
+        component: () => import('@/components/fronts/Index')
+      },
+      {
+        path: '/main',
+        component: () => import('@/components/fronts/Main'),
+        children: [
+          { path: '/contest', component: () => import('@/components/fronts/Contest') },
+          { path: '/subject', component: () => import('@/components/fronts/Sub') },
+          { path: '/share', component: () => import('@/components/fronts/Share') }
+        ]
+      }
     ]
   }
 ]

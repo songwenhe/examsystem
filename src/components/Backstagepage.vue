@@ -8,7 +8,7 @@
           <li>
             <img src="@/assets/th.jpg" alt="" style="margin-left: 480px" />
             <el-dropdown @command="handleCommand">
-              <span class="el-dropdown-link">admin<i class="el-icon-arrow-down el-icon--right"></i> </span>
+              <span class="el-dropdown-link">{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i> </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="center">个人中心</el-dropdown-item>
                 <el-dropdown-item command="quit">退出系统</el-dropdown-item>
@@ -70,11 +70,13 @@ export default {
   name: 'backstagepage',
   data() {
     return {
+      userName: 'string',
       isCollapse: false,
       index: ''
     }
   },
   created() {
+    this.userName = localStorage.getItem('userName')
     this.index = localStorage.getItem('index')
   },
   methods: {
@@ -98,17 +100,14 @@ export default {
   line-height: 60px;
   /* x 偏移量 | y 偏移量 | 阴影模糊半径 | 阴影扩散半径 | 阴影颜色 */
   box-shadow: 0px 3px 2px 2px rgba(0, 0, 0, 0.3);
-
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     height: 60px;
-
     li {
       flex: 1;
-
       img {
         height: 90%;
         float: left;

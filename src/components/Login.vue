@@ -33,8 +33,10 @@ export default {
         url: 'http://127.0.0.1:8088/account/api/login',
         params: this.ruleForm
       }).then((response) => {
+        console.log(response)
         if (response.data.success) {
           this.$message({ message: '登录成功', type: 'success' })
+          localStorage.setItem('userName', response.data.data.username)
           if (response.data.data.level === 2) {
             this.$router.push('/_backstagepage')
           } else {

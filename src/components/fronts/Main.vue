@@ -2,8 +2,7 @@
   <div class="contest-container">
     <el-header>
       <el-menu mode="horizontal" :router="true" :collapse-transition="false" :default-active="index" @select="slt" class="el-menu-demo">
-        <el-menu-item index="_frontpage"><img src="@/assets/logo.495bc594.png" alt="" height="100%" /></el-menu-item>
-        <el-menu-item index="_frontpage">首页</el-menu-item>
+        <el-menu-item index="_frontpage"><img src="@/assets/logo.495bc594.png" alt="" height="100%" class="log" />首页</el-menu-item>
         <el-menu-item index="contest">在线评测</el-menu-item>
         <el-menu-item index="subject">科目学习</el-menu-item>
         <el-menu-item index="share">分享中心</el-menu-item>
@@ -19,7 +18,7 @@
         </el-menu-item>
       </el-menu>
     </el-header>
-    <el-main>
+    <el-main class="main">
       <router-view></router-view>
     </el-main>
   </div>
@@ -55,5 +54,11 @@ export default {
 .usermenu {
   position: absolute;
   right: 10px;
+}
+.main {
+  height: 100%;
+}
+.log {
+  margin-right: 50px;
 }
 </style>

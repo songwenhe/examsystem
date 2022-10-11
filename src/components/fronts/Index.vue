@@ -23,7 +23,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+  created() {
+    this.index = localStorage.getItem('index')
+  }
+}
 </script>
 
 <style lang="less" scoped>

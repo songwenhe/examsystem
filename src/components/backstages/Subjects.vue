@@ -96,7 +96,7 @@ const axios = require('axios')
 
 export default {
   created() {
-    this.allSubjects()
+    this.getSubjects()
   },
   data() {
     return {
@@ -277,16 +277,16 @@ export default {
           })
         })
       })
-    },
-    allSubjects() {
-      axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
-      }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getSubjects()
-      })
     }
+    // allSubjects() {
+    //   axios({
+    //     method: 'get',
+    //     url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
+    //   }).then((response) => {
+    //     this.pageSubjects = response.data.list
+    //     this.getSubjects()
+    //   })
+    // }
   }
 }
 </script>

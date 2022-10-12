@@ -1,40 +1,64 @@
 <template>
-  <div class="contest-container">
+  <div class="subject-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>科目学习</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-row gutter="10" type="flex" v-for="(o, index) in 2" :key="o">
-      <el-col :span="8" :offset="index > 0 ? 2 : 0">
-        <el-card :body-style="{ padding: '0px' }" class="card-content">
-          <a href="">
-            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image" />
-          </a>
-          <button><span></span></button>
-          <div>
-            <span><i></i>{{}}</span>
-          </div>
-          <div>
-            <span><i></i>{{}}</span>
-            <span><i></i>{{}}</span>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+    <div style="width: 1300px">
+      <el-row>
+        <el-col :span="6" v-for="i in tableData" :key="i">
+          <el-card :body-style="{ padding: '0px' }" class="card-content">
+            <a href="">
+              <img :src="i.imgUrl" class="image" />
+            </a>
+            <button type="button">
+              <span>{{ i.name }}</span>
+            </button>
+            <div class="cart-author">
+              <span><i class="el-icon-user-solid"> </i> {{ userName }}</span>
+            </div>
+            <div class="cart-detail">
+              <span><i class="el-icon-tickets"></i>{{ i.questionNum }}</span>
+              <span><i class="el-icon-upload"></i>私有题库</span>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-pagination
+        @current-change="pageChange"
+        :page-size="query.size"
+        :pager-count="11"
+        layout="prev, pager, next"
+        :total="total"
+        style="margin-left: 0px"
+        :current-page="query.page"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
+const axios = require('axios')
 export default {
   data() {
     return {
-      index: ''
+      userName: '',
+      index: '',
+      tableData: '',
+      total: 0,
+      query: {
+        size: 12,
+        page: 1,
+        keyword: ''
+      }
     }
   },
   created() {
+    this.userName = localStorage.getItem('userName')
     this.index = localStorage.getItem('index')
+    this.getSubjects()
   },
   methods: {
     slt(evt) {
@@ -44,23 +68,6 @@ export default {
     pageChange(res) {
       this.query.page = res
       this.getSubjects()
-    },
-    handleTime(now) {
-      const time = new Date(now)
-      let res = ''
-      let year = time.getFullYear()
-      let month = time.getMonth() + 1
-      month = month > 9 ? month : '0' + month
-      let day = time.getDate()
-      day = day > 9 ? day : '0' + day
-      let hour = time.getHours()
-      hour = hour > 9 ? hour : '0' + hour
-      let minutes = time.getMinutes()
-      minutes = minutes > 9 ? minutes : '0' + minutes
-      let seconds = time.getSeconds()
-      seconds = seconds > 9 ? seconds : '0' + seconds
-      res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
-      return res
     },
     subjectName(id) {
       // console.log(id)
@@ -83,27 +90,13 @@ export default {
             // console.log(Data.subjectName(item.subjectId))
           }) */
         this.total = response.data.total
+
         this.tableData = response.data.list.map((item) => {
-          /*  return {
-              ...item,
-              startTime: this.handleTime(item.startTime),
-              endTime: this.handleTime(item.endTime),
-              subjectId: this.subjectName(item.subjectId)
-            } */
-          return Object.assign(item, {
-            createTime: this.handleTime(item.createTime),
-            updateTime: this.handleTime(item.updateTime)
-          })
+          return {
+            ...item,
+            imgUrl: 'http://localhost:8088/' + item.imgUrl
+          }
         })
-      })
-    },
-    allSubjects() {
-      axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
-      }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getSubjects()
       })
     }
   }
@@ -111,17 +104,43 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.subject-container {
+  min-width: 1300px;
+}
+.cart-detail {
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 36px;
+  line-height: 36px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  color: #999;
+  box-sizing: border-box;
+  margin-left: 10px;
+}
+.cart-author {
+  margin-left: 10px;
+}
+.cart-title {
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: 600;
+}
 .card-content {
   position: relative;
   width: 260px;
   height: 260px;
   margin-bottom: 20px;
+  margin-left: 33px;
   border-radius: 8px;
 }
 .image {
   width: 100%;
   height: 140px;
-  transition: all linear 0.3s;
-  cursor: pointer;
+  overflow: hidden;
 }
 </style>

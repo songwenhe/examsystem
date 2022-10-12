@@ -1,5 +1,5 @@
 <template>
-  <div class="contest-container">
+  <div class="main-container">
     <el-header>
       <el-menu mode="horizontal" :router="true" :collapse-transition="false" :default-active="index" @select="slt" class="el-menu-demo">
         <el-menu-item index="_frontpage"><img src="@/assets/logo.495bc594.png" alt="" height="100%" class="log" />首页</el-menu-item>
@@ -18,7 +18,7 @@
         </el-menu-item>
       </el-menu>
     </el-header>
-    <el-main class="main">
+    <el-main>
       <router-view></router-view>
     </el-main>
   </div>
@@ -51,12 +51,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.main-container {
+  min-width: 1300px;
+}
 .usermenu {
   position: absolute;
   right: 10px;
-}
-.main {
-  height: 100%;
 }
 .log {
   margin-right: 50px;

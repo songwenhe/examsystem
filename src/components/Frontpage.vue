@@ -1,7 +1,7 @@
 <template>
   <div class="frontpage-container">
     <el-container>
-      <el-main>
+      <el-main class="frontpage">
         <router-view></router-view>
       </el-main>
       <el-footer class="footer" height="auto">
@@ -21,11 +21,17 @@ a {
   text-decoration: none;
 }
 .frontpage-container {
+  min-width: 1300px;
   display: flex;
+  justify-content: center;
   flex-flow: column;
   min-height: 100%;
   background-color: #fcfdff;
   background-image: linear-gradient(to top right, #12cbc4, #0652dd);
+  .frontpage {
+    display: flex;
+    justify-content: center;
+  }
 }
 .footer {
   text-align: center;

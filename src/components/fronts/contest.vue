@@ -6,25 +6,36 @@
         <el-breadcrumb-item>在线评测</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-table :data="tableData" style="width: 90%" height="500px">
-      <el-table-column align="center" label="考试名称" prop="title"></el-table-column>
-      <el-table-column align="center" label="开始时间" prop="startTime"></el-table-column>
-      <el-table-column align="center" label="结束时间" prop="endTime"></el-table-column>
-      <el-table-column align="center" label="考试科目" prop="subjectName"> </el-table-column>
-      <el-table-column align="center" label="操作" prop="state">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper" v-if="scope.row.state === 1">
-            <el-button type="info" disabled>未开始</el-button>
-          </div>
-          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 2">
-            <el-button type="success" @click="doContest">进入考试</el-button>
-          </div>
-          <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 3">
-            <el-button type="danger" disabled>已结束</el-button>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div>
+      <el-table :data="tableData" style="width: 100%; height: 100%">
+        <el-table-column align="center" label="考试名称" prop="title"></el-table-column>
+        <el-table-column align="center" label="开始时间" prop="startTime"></el-table-column>
+        <el-table-column align="center" label="结束时间" prop="endTime"></el-table-column>
+        <el-table-column align="center" label="考试科目" prop="subjectName"> </el-table-column>
+        <el-table-column align="center" label="操作" prop="state">
+          <template slot-scope="scope">
+            <div slot="reference" class="name-wrapper" v-if="scope.row.state === 1">
+              <el-button type="info" disabled>未开始</el-button>
+            </div>
+            <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 2">
+              <el-button type="success" @click="doContest">进入考试</el-button>
+            </div>
+            <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 3">
+              <el-button type="danger" disabled>已结束</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        @current-change="pageChange"
+        :page-size="query.size"
+        :pager-count="11"
+        layout="prev, pager, next"
+        :total="total"
+        style="margin-left: 0px"
+        :current-page="query.page"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
@@ -53,11 +64,6 @@ export default {
     pageChange(res) {
       this.query.page = res
       this.getContents()
-    },
-    handleEdit(index, row) {
-      // console.log(index, row)
-      this.tableData1 = row
-      this.dialogFormVisible = true
     },
     handleTime(now) {
       const time = new Date(now)
@@ -123,4 +129,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.contest-container {
+  min-width: 1300px;
+}
+</style>

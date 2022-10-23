@@ -9,7 +9,7 @@
     <div style="width: 1300px">
       <el-row>
         <el-col :span="6" v-for="i in tableData" :key="i">
-          <el-card :body-style="{ padding: '0px' }" class="card-content">
+          <el-card :body-style="{ padding: '0px' }" class="card-content" shadow="hover">
             <a href="">
               <img :src="i.imgUrl" class="image" />
             </a>
@@ -65,6 +65,7 @@ export default {
       localStorage.setItem('index', evt)
       this.index = localStorage.getItem('index')
     },
+
     pageChange(res) {
       this.query.page = res
       this.getSubjects()
@@ -138,6 +139,7 @@ export default {
   margin-left: 33px;
   border-radius: 8px;
 }
+
 .image {
   width: 100%;
   height: 140px;

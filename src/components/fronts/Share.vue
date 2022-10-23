@@ -12,8 +12,16 @@
           <span>卡片名称</span>
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
-        <div v-for="o in 4" :key="o" class="text item">
-          {{ '列表内容 ' + o }}
+        <div v-for="i in tableData" :key="i" class="text item">
+          <a href="">
+            <h3>{{ i.title }}</h3>
+          </a>
+          <p>
+            <span>{{ i.authorId }}</span>
+            <span>{{ i.createTime }}<em>发表在[我要提问]</em></span>
+            <span><em>最后回复时间:</em>{{ i.lastReplyTime }}</span>
+          </p>
+          <p class="icons"><i class="el-icon-chat-dot-round"></i>{{ i.replyNum }}</p>
         </div>
       </el-card>
       <el-pagination
@@ -44,6 +52,7 @@ export default {
     }
   },
   created() {
+    this.getShare()
     this.index = localStorage.getItem('index')
   },
   methods: {
@@ -71,13 +80,15 @@ export default {
     getShare() {
       axios({
         methods: 'get',
-        url: 'http://127.0.0.1:8088/comment/api/pageComment',
+        url: 'http://127.0.0.1:8088/post/api/pagePosts',
         params: this.query
       }).then((response) => {
         this.total = response.data.total
         this.tableData = response.data.list.map((item) => {
           return Object.assign(item, {
-            createTime: this.handleTime(item.createTime)
+            createTime: this.handleTime(item.createTime),
+            updateTime: this.handleTime(item.updateTime),
+            lastReplyTime: this.handleTime(item.lastReplyTime)
           })
         })
       })
@@ -87,6 +98,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.contest-container {
+  min-width: 1300px;
+}
+.icons {
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+}
+.icons i {
+  padding: 0 4px;
+}
 .text {
   font-size: 14px;
 }
@@ -102,9 +124,5 @@ export default {
 }
 .clearfix:after {
   clear: both;
-}
-
-.box-card {
-  width: 480px;
 }
 </style>

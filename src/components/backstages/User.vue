@@ -15,7 +15,7 @@
       <el-button class="el-icon-search" size="medium" @click="getUsers"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true">添加用户</el-button>
     </div>
-    <el-table :data="tableData" style="width: 90%" height="500px">
+    <el-table :data="tableData" style="width: 90%" max-height="500px">
       <el-table-column align="center" label="头像" prop="ImgUrl">
         <template slot-scope="scope">
           <img :src="scope.row.ImgUrl" style="width: 60px; height: 60px" />

@@ -26,4 +26,13 @@ body {
   background-color: #eee;
   min-width: 1300px;
 }
+.split-line {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  font-size: 30px;
+  text-align: center;
+  font-weight: 600;
+}
 </style>

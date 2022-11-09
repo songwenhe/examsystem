@@ -27,7 +27,6 @@ a {
   flex-flow: column;
   min-height: 100%;
   background-color: #fcfdff;
-  background-image: linear-gradient(to top right, #12cbc4, #0652dd);
   .frontpage {
     display: flex;
     justify-content: center;

@@ -9,11 +9,13 @@
     <div>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>卡片名称</span>
-          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          <span>热门帖子</span>
+          <el-button style="float: right; padding: 3px 0" type="danger" plain>
+            <span><i class="el-icon-edit"></i>我要发布</span>
+          </el-button>
         </div>
-        <div v-for="i in tableData" :key="i" class="text item">
-          <a href="">
+        <div v-for="i in tableData" :key="i.id" class="text item">
+          <a href="javascript:;" @click="toPost(i)">
             <h3>{{ i.title }}</h3>
           </a>
           <p>
@@ -38,27 +40,63 @@
 </template>
 
 <script>
+// postDetail
+/* store/index.js */
+/*
+  state: {
+    postDetail: {}
+  },
+  mutations: {
+    setPostDetail (state,payload) {
+      state.postDetail = payload
+    }
+
+  }
+*/
+/* a.vue */
+// import { mapState, mapMutations } from 'vuex'
+/*
+  // 一、取值流程
+  // 1. 引入state辅助函数
+  computed: mapState({
+      postDetail: state => state.postDetail,
+  })
+  // 2.取值
+  this.postDetail
+  // 二、赋值流程
+  // 1. 引入 mutation辅助函数
+   ...mapMutations({
+      setPostDetail: 'setPostDetail' //
+  // 2. 赋值
+   this.setPostDetail(detail)
+ */
+import { mapState, mapMutations } from 'vuex'
 const axios = require('axios')
 export default {
   data() {
     return {
-      index: '',
-      total: '',
-      tableData: '',
+      total: 0,
+      tableData: [],
       query: {
-        pageSize: 10,
-        pageNum: 1
+        size: 10,
+        page: 1,
+        keyword: ''
       }
     }
   },
+  computed: mapState({
+    postDetail: (state) => state.postDetail
+  }),
   created() {
     this.getShare()
-    this.index = localStorage.getItem('index')
   },
   methods: {
-    slt(evt) {
-      localStorage.setItem('index', evt)
-      this.index = localStorage.getItem('index')
+    ...mapMutations({
+      setPostDetail: 'setPostDetail' // 将 `this.setPostDetail()` 映射为 `this.$store.commit('setPostDetail')`
+    }),
+    pageChange(res) {
+      this.query.page = res
+      this.getShare()
     },
     handleTime(now) {
       const time = new Date(now)
@@ -79,7 +117,7 @@ export default {
     },
     getShare() {
       axios({
-        methods: 'get',
+        method: 'get',
         url: 'http://127.0.0.1:8088/post/api/pagePosts',
         params: this.query
       }).then((response) => {
@@ -92,6 +130,10 @@ export default {
           })
         })
       })
+    },
+    toPost(post) {
+      this.setPostDetail(post)
+      this.$router.push('/_frontpage/share/' + post.id)
     }
   }
 }

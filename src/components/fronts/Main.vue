@@ -2,10 +2,10 @@
   <div class="main-container">
     <el-header>
       <el-menu mode="horizontal" :router="true" :collapse-transition="false" :default-active="index" @select="slt" class="el-menu-demo">
-        <el-menu-item index="_frontpage"><img src="@/assets/logo.495bc594.png" alt="" height="100%" class="log" />首页</el-menu-item>
-        <el-menu-item index="contest">在线评测</el-menu-item>
-        <el-menu-item index="subject">科目学习</el-menu-item>
-        <el-menu-item index="share">分享中心</el-menu-item>
+        <el-menu-item index="/_frontpage"><img src="@/assets/logo.495bc594.png" alt="" height="100%" class="log" />首页</el-menu-item>
+        <el-menu-item index="/_frontpage/contest">在线评测</el-menu-item>
+        <el-menu-item index="/_frontpage/subject">科目学习</el-menu-item>
+        <el-menu-item index="/_frontpage/shares">分享中心</el-menu-item>
         <el-menu-item class="usermenu">
           <img src="@/assets/th.jpg" alt="" height="100%" />
           <el-dropdown @command="handleCommand">
@@ -44,6 +44,8 @@ export default {
     handleCommand(command) {
       if (command === 'quit') {
         this.$router.push('/_login')
+      } else if (command === 'center') {
+        this.$router.push('/_frontpage/users')
       }
     }
   }
@@ -53,6 +55,7 @@ export default {
 <style lang="less" scoped>
 .main-container {
   min-width: 1300px;
+  background-color: #fff;
 }
 .usermenu {
   position: absolute;

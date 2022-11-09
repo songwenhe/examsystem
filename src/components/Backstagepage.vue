@@ -5,10 +5,10 @@
         <ul>
           <li><img src="@/assets/logo.495bc594.png" alt="" /></li>
           <li>成都东软学院考试平台控制台</li>
-          <li>
-            <img src="@/assets/th.jpg" alt="" style="margin-left: 480px" />
+          <li style="display: flex; justify-content: flex-end">
+            <img src="@/assets/th.jpg" alt="" />
             <el-dropdown @command="handleCommand">
-              <span class="el-dropdown-link">{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i> </span>
+              <span class="el-dropdown-link">{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="center">个人中心</el-dropdown-item>
                 <el-dropdown-item command="quit">退出系统</el-dropdown-item>
@@ -31,28 +31,28 @@
             class="el-menu-vertical-demo"
             @select="slt"
           >
-            <el-menu-item index="_contests"> <i class="el-icon-menu"></i><span slot="title">考试管理</span> </el-menu-item>
-            <el-menu-item index="_questions">
+            <el-menu-item index="/_backstagepage/_contests"><i class="el-icon-menu"></i><span slot="title">考试管理</span></el-menu-item>
+            <el-menu-item index="/_backstagepage/_questions">
               <i class="el-icon-location"></i>
               <span slot="title">题目管理</span>
             </el-menu-item>
-            <el-menu-item index="_subjects">
+            <el-menu-item index="/_backstagepage/_subjects">
               <i class="el-icon-document"></i>
               <span slot="title">科目管理</span>
             </el-menu-item>
-            <el-menu-item index="_grades">
+            <el-menu-item index="/_backstagepage/_grades">
               <i class="el-icon-setting"></i>
               <span slot="title">成绩管理</span>
             </el-menu-item>
-            <el-menu-item index="_user">
+            <el-menu-item index="/_backstagepage/_user">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </el-menu-item>
-            <el-menu-item index="_posts">
+            <el-menu-item index="/_backstagepage/_posts">
               <i class="el-icon-location"></i>
               <span>帖子管理</span>
             </el-menu-item>
-            <el-menu-item index="_comments">
+            <el-menu-item index="/_backstagepage/_comments">
               <i class="el-icon-location"></i>
               <span>评论管理</span>
             </el-menu-item>

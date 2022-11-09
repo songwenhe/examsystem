@@ -18,7 +18,7 @@
               <el-button type="info" disabled>未开始</el-button>
             </div>
             <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 2">
-              <el-button type="success" @click="doContest">进入考试</el-button>
+              <el-button type="success" @click="doContest(scope.$index, scope.row)">进入考试</el-button>
             </div>
             <div slot="reference" class="name-wrapper" v-else-if="scope.row.state === 3">
               <el-button type="danger" disabled>已结束</el-button>
@@ -41,6 +41,7 @@
 
 <script>
 const axios = require('axios')
+import { mapState, mapMutations } from 'vuex'
 export default {
   created() {
     this.getSubjects()
@@ -60,7 +61,11 @@ export default {
       }
     }
   },
+  computed: mapState({}),
   methods: {
+    ...mapMutations({
+      setContest: 'setContest' // 将 `this.setPostDetail()` 映射为 `this.$store.commit('setPostDetail')`
+    }),
     pageChange(res) {
       this.query.page = res
       this.getContents()
@@ -82,6 +87,10 @@ export default {
       res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
       return res
     },
+    doContest(index, row) {
+      this.setContest(row)
+      this.$router.push('contests/' + row.id + '/' + row.title)
+    },
     subjectName(id) {
       let subject = this.pageSubjects.find((item) => id === item.id)
       if (subject !== undefined) return subject.name
@@ -93,21 +102,16 @@ export default {
         url: 'http://127.0.0.1:8088/contest/api/pageContest',
         params: this.query
       }).then((response) => {
-        /* this.tableData = response.data.list
-        this.tableData.forEach((item) => {
-          item.startTime = this.handleTime(item.startTime)
-          item.endTime = this.handleTime(item.endTime)
-          item.subjectId = this.subjectName(item.subjectId)
-          // console.log(Data.subjectName(item.subjectId))
-        }) */
         this.total = response.data.total
         this.tableData = response.data.list.map((item) => {
-          /*  return {
-            ...item,
-            startTime: this.handleTime(item.startTime),
-            endTime: this.handleTime(item.endTime),
-            subjectId: this.subjectName(item.subjectId)
-          } */
+          const nowTime = new Date().getTime()
+          if (nowTime < item.startTime) {
+            item.state = 1
+          } else if (nowTime > item.startTime && nowTime < item.endTime) {
+            item.state = 2
+          } else if (nowTime > item.endTime) {
+            item.state = 3
+          }
           return Object.assign(item, {
             startTime: this.handleTime(item.startTime),
             endTime: this.handleTime(item.endTime),

@@ -1,5 +1,5 @@
 <template>
-  <div class="subject-container">
+  <div class="subjects-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
@@ -10,10 +10,10 @@
       <el-row>
         <el-col :span="6" v-for="i in tableData" :key="i">
           <el-card :body-style="{ padding: '0px' }" class="card-content" shadow="hover">
-            <a href="">
+            <a href="javascript:;" @click="subs(i.id)">
               <img :src="i.imgUrl" class="image" />
             </a>
-            <button type="button">
+            <button type="button" class="card-title" @click="subs(i.id)">
               <span>{{ i.name }}</span>
             </button>
             <div class="cart-author">
@@ -45,7 +45,6 @@ export default {
   data() {
     return {
       userName: '',
-      index: '',
       tableData: '',
       total: 0,
       query: {
@@ -57,15 +56,13 @@ export default {
   },
   created() {
     this.userName = localStorage.getItem('userName')
-    this.index = localStorage.getItem('index')
     this.getSubjects()
   },
   methods: {
-    slt(evt) {
-      localStorage.setItem('index', evt)
-      this.index = localStorage.getItem('index')
+    subs(id) {
+      this.$router.push('subs/' + id)
+      localStorage.setItem('subjectId', id)
     },
-
     pageChange(res) {
       this.query.page = res
       this.getSubjects()
@@ -105,7 +102,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.subject-container {
+.subjects-container {
   min-width: 1300px;
 }
 .cart-detail {
@@ -126,10 +123,12 @@ export default {
 .cart-author {
   margin-left: 10px;
 }
-.cart-title {
-  margin-left: 10px;
-  font-size: 20px;
-  font-weight: 600;
+
+.el-button--text {
+  color: #409eff;
+  background: 0 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 .card-content {
   position: relative;
@@ -139,7 +138,27 @@ export default {
   margin-left: 33px;
   border-radius: 8px;
 }
-
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #409eff;
+  padding-left: 0;
+  padding-right: 0;
+  border-color: transparent;
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #dcdfe6;
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  transition: 0.1s;
+  padding: 12px 20px;
+  border-radius: 4px;
+}
 .image {
   width: 100%;
   height: 140px;

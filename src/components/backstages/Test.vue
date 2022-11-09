@@ -15,7 +15,7 @@
       <el-button class="el-icon-search" size="medium" @click="getContents()"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true">添加考试</el-button>
     </div>
-    <el-table :data="tableData" style="width: 90%" height="500px">
+    <el-table :data="tableData" style="width: 90%" max-height="500px">
       <el-table-column align="center" label="考试名称" prop="title"></el-table-column>
       <el-table-column align="center" label="开始时间" prop="startTime"></el-table-column>
       <el-table-column align="center" label="结束时间" prop="endTime"></el-table-column>
@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="success" icon="el-icon-search" circle></el-button>
+          <el-button size="medium" type="success" icon="el-icon-search" @click="toProblem(scope.$index, scope.row)" circle></el-button>
           <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
           <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
         </template>
@@ -103,6 +103,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 const axios = require('axios')
 export default {
   created() {
@@ -160,7 +161,11 @@ export default {
       }
     }
   },
+  computed: mapState({}),
   methods: {
+    ...mapMutations({
+      setContest: 'setContest' // 将 `this.setPostDetail()` 映射为 `this.$store.commit('setPostDetail')`
+    }),
     openDel(index, row) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -193,6 +198,11 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    toProblem(index, row) {
+      console.log(row)
+      this.setContest(row)
+      this.$router.push('_problems/' + row.id + '/' + row.title)
     },
     pageChange(res) {
       this.query.page = res
@@ -298,6 +308,14 @@ export default {
             endTime: this.handleTime(item.endTime),
             subjectId: this.subjectName(item.subjectId)
           } */
+          const nowTime = new Date().getTime()
+          if (nowTime < item.startTime) {
+            item.state = 1
+          } else if (nowTime > item.startTime && nowTime < item.endTime) {
+            item.state = 2
+          } else if (nowTime > item.endTime) {
+            item.state = 3
+          }
           return Object.assign(item, {
             startTime: this.handleTime(item.startTime),
             endTime: this.handleTime(item.endTime),

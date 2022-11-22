@@ -18,7 +18,8 @@ const routes = [
       { path: '_posts', component: () => import('@/components/backstages/Posts') },
       { path: '_comments', component: () => import('@/components/backstages/Comments') },
       { path: '_problems/:id/:contestName', component: () => import('@/components/backstages/problems/Problems') },
-      { path: '_grade/:id/:contestName', component: () => import('@/components/backstages/garde/Garde') }
+      { path: '_grade/:id/:contestName', component: () => import('@/components/backstages/garde/Garde') },
+      { path: '_submitgrade/:id/:contestName', component: () => import('@/components/backstages/garde/Submitgarde') }
       // { path: '_tests/:id/:contestName', component: () => import('@/components/backstages/test/Tests') }
     ]
   },
@@ -39,6 +40,7 @@ const routes = [
           { path: '/_frontpage/problem/:id', component: () => import('@/components/fronts/subs/Problem') },
           { path: '/_frontpage/share/:id', component: () => import('@/components/fronts/posts/Share') },
           { path: '/_frontpage/contests/:id/:contestName', component: () => import('@/components/fronts/contests/Contests') },
+          { path: '/_frontpage/submitpost', component: () => import('@/components/fronts/posts/submitPost') },
           {
             path: '/_frontpage/users',
             component: () => import('@/components/fronts/users/Users'),

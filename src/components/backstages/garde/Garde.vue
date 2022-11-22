@@ -10,13 +10,10 @@
         <el-breadcrumb-item>{{ contestData.title }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-
     <el-table :data="tableData" style="width: 90%" max-height="500px">
       <el-table-column align="center" label="学号" prop="studentId"></el-table-column>
       <el-table-column align="center" label="姓名" prop="name"></el-table-column>
-
       <el-table-column align="center" label="选择题分数" prop="autoResult"></el-table-column>
-
       <el-table-column align="center" label="主观题分数" prop="manulResult"></el-table-column>
       <el-table-column align="center" label="总分" prop="result"></el-table-column>
     </el-table>

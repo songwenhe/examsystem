@@ -80,15 +80,15 @@
           <div class="select-problem">
             <button
               class="problem"
-              v-for="(item, index) in answerCardForm.problemList"
-              :key="item.id"
-              @click="showProblem(index + 1)"
+              v-for="index in problemNum"
+              :key="index"
+              @click="showProblem(index)"
               :class="{
-                'problem-current': index + 1 === currentIndex,
-                'problem-active': existArray[index + 1]
+                'problem-current': index === currentIndex,
+                'problem-active': existArray[index]
               }"
             >
-              {{ index + 1 }}
+              {{ index }}
             </button>
             <button class="problem-fill" v-for="index in fillNum" :key="index + 'sss'"></button>
             <el-button type="success" @click="submitCard">交卷</el-button>
@@ -120,12 +120,25 @@ export default {
     }
   },
   computed: mapState({
-    contest: (state) => state.contest
+    contest: (state) => state.contest,
+    problemNum() {
+      return this.answerCardForm.problemList.length
+    },
+    // 空位数量
+    fillNum() {
+      return this.problemNum % 5 === 0 ? 0 : 5 - (this.problemNum % 5)
+    }
   }),
+
   created() {
     this.userId = parseInt(localStorage.getItem('userId'))
     this.userName = localStorage.getItem('userName')
-    this.contestData = this.contest
+    this.contestData = Object.assign(this.contest, {
+      questionTypeName: this.getQuestionType(this.contest.questionType),
+      createTime: this.handleTime(this.contest.createTime),
+      updateTime: this.handleTime(this.contest.updateTime)
+    })
+
     this.getQuestions()
   },
   mounted() {
@@ -133,6 +146,23 @@ export default {
     this.timer = setInterval(this.handleSurplus, 1000)
   },
   methods: {
+    handleTime(now) {
+      const time = new Date(now)
+      let res = ''
+      let year = time.getFullYear()
+      let month = time.getMonth() + 1
+      month = month > 9 ? month : '0' + month
+      let day = time.getDate()
+      day = day > 9 ? day : '0' + day
+      let hour = time.getHours()
+      hour = hour > 9 ? hour : '0' + hour
+      let minutes = time.getMinutes()
+      minutes = minutes > 9 ? minutes : '0' + minutes
+      let seconds = time.getSeconds()
+      seconds = seconds > 9 ? seconds : '0' + seconds
+      res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
+      return res
+    },
     handleSurplus() {
       const now = Date.now()
       const end = new Date(this.contestData.endTime).getTime()
@@ -185,6 +215,40 @@ export default {
       } else if (type === 2) return '问答'
       else if (type === 3) return '编程'
       else return '未知题型'
+    },
+    submitCard() {
+      this.$refs.answerCardForm.validate(async (valid) => {
+        if (!valid) return this.$message.error('还有未写题目')
+        const answer = []
+        this.answerCardForm.problemList.forEach((item) => {
+          answer.push(item.value)
+        })
+
+        console.log(this.answer)
+        // const obj = {}
+        axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8088/grade/api/submitContest',
+          data: {
+            answerJson: answer.join('_~_'),
+            studentId: this.userId,
+            contestId: this.contestData.id,
+            finishTime: new Date()
+          }
+        }).then((response) => {
+          console.log(response)
+          if (response.status === 200) {
+            if (response.data.success) {
+              this.loading()
+              this.$message.success(response.data.message)
+            } else {
+              this.$message.warning(response.data.message)
+            }
+          } else {
+            this.$message.warning('请求失败')
+          }
+        })
+      })
     }
   }
 }

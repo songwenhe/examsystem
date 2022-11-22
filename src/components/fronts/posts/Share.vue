@@ -8,18 +8,22 @@
       </el-breadcrumb>
     </div>
     <div><el-divider></el-divider></div>
-    <div>
-      <div>
-        <a href="javascript:;">{{ userName }}</a>
-        <p>
-          <span>{{ post.createTime }}发表</span>
-        </p>
-      </div>
-      <p>
-        <i class="el-icon-chat-dot-round">{{ post.replyNum }}</i>
-        <i class="el-icon-thumb">6</i>
-        <i class="el-icon-view">123</i>
-      </p>
+    <div class="postdesc">
+      <el-row>
+        <el-col :span="12">
+          <div class="content">
+            <a href=""
+              ><h4>{{ userName }}</h4>
+            </a>
+            <span class="createDate">{{ post.createTime }}发表</span>
+          </div>
+          <p class="icons">
+            <i class="el-icon-chat-dot-round">{{ post.replyNum }}</i>
+            <i class="el-icon-thumb">6</i>
+            <i class="el-icon-view">123</i>
+          </p>
+        </el-col>
+      </el-row>
     </div>
     <div>
       <el-card class="box-card">
@@ -35,7 +39,7 @@
         <div><span></span></div>
         <div>{{ i.content }}</div>
         <!-- <a href="javascript:;" @click.prevent="">回复</a> -->
-        <a href="" @click.prevent="$router.push('/index')">回复</a>
+        <a href="" @click.prevent="$router.push('')">回复</a>
       </div>
     </div>
   </div>
@@ -93,7 +97,88 @@ export default {
 </script>
 
 <style lang="less" scoped>
-a {
-  text-decoration: none;
+.title {
+  i {
+    margin-right: 6px;
+  }
+}
+.postDetail {
+  .el-main {
+    padding: 0 20px;
+  }
+}
+
+.postdesc {
+  font-size: 14px;
+  position: relative;
+  .content {
+    a h4 {
+      margin: 0 0 12px 0;
+    }
+  }
+  .icons {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    i {
+      font-size: 16px;
+      padding: 0 4px;
+    }
+  }
+}
+
+.postContent {
+  margin: 40px 0;
+  letter-spacing: 0.1em;
+}
+
+.replyTitle {
+  font-size: 20px;
+  i {
+    padding-right: 4px;
+  }
+}
+
+.comment {
+  .content {
+    font-size: 14px;
+    .replyDate {
+      color: #aaa;
+    }
+    .actions {
+      color: #e74c3c;
+    }
+    .el-row {
+      margin-bottom: 20px;
+    }
+  }
+  .comments {
+    margin-top: 6px;
+  }
+  .text {
+    width: 350px;
+  }
+}
+
+.commentArea,
+.replyArea {
+  position: relative;
+  width: 600px;
+  margin-bottom: 30px;
+  .btns {
+    position: absolute;
+    right: 0;
+    bottom: -35px;
+    margin: 10px 10px 0 0;
+    z-index: 99;
+  }
+}
+// 动画
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.6s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

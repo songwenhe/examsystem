@@ -202,7 +202,7 @@ export default {
     toProblem(index, row) {
       console.log(row)
       this.setContest(row)
-      this.$router.push('_problems/' + row.id + '/' + row.title)
+      this.$router.push(`_problems/${row.id}/${row.title}`)
     },
     pageChange(res) {
       this.query.page = res

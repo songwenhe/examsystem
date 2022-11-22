@@ -35,7 +35,7 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button size="medium" type="success" icon="el-icon-search" @click="goGrade(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="primary" icon="el-icon-edit" @click="submitGrade(scope.$index, scope.row)" circle></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,56 +49,6 @@
       style="margin-left: 0px"
       :current-page="query.page"
     ></el-pagination>
-
-    <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="考试名称">
-          <el-input v-model="ruleForm.title"></el-input>
-        </el-form-item>
-        <el-form-item label="考试科目">
-          <el-select v-model="ruleForm.subjectId" filterable placeholder="请选择科目">
-            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-          {{ ruleForm.subjectId }}{{ ruleForm.id }}
-        </el-form-item>
-        <el-form-item label="活动时间" required>
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker type="datetimerange" v-model="ruleForm.data1" style="width: 100%"></el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="clearForm">取 消</el-button>
-        <el-button type="primary" @click="putContest">修改</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="dialogTableVisible" @close="clearTable">
-      <el-form :model="ruleTable" label-width="100px">
-        <el-form-item label="考试名称">
-          <el-input v-model="ruleTable.title"></el-input>
-        </el-form-item>
-        <el-form-item label="考试科目">
-          <el-select v-model="ruleTable.subjectId" filterable placeholder="请选择科目">
-            <el-option v-for="item in pageSubjects" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-          </el-select>
-          {{ ruleTable.subjectId }}{{ ruleTable.id }}
-        </el-form-item>
-        <el-form-item label="活动时间" required>
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker type="datetimerange" v-model="ruleTable.data1" style="width: 100%"></el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="clearTable">取 消</el-button>
-        <el-button type="primary" @click="addSubject">添加</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -161,42 +111,9 @@ export default {
     ...mapMutations({
       setContest: 'setContest' // 将 `this.setPostDetail()` 映射为 `this.$store.commit('setPostDetail')`
     }),
-    openDel(index, row) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        center: true
-      })
-        .then(() => {
-          axios({
-            method: 'delete',
-            url: 'http://127.0.0.1:8088/contest/api/deleteContest/' + row.id
-          }).then((response) => {
-            if (response.data.success) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-            } else {
-              this.$message({
-                type: 'warning',
-                message: '删除失败!'
-              })
-            }
-            this.getContents()
-          })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
     goGrade(index, row) {
       this.setContest(row)
-      this.$router.push('_grade/' + row.id + '/' + row.title)
+      this.$router.push(`_grade/${row.id}/${row.title}`)
     },
     pageChange(res) {
       this.query.page = res
@@ -242,22 +159,8 @@ export default {
       this.ruleTable.id = 1
       this.dialogTableVisible = false
     },
-    handleEdit(index, row) {
-      // console.log(index, row)
-      this.tableData1 = row
-      this.dialogFormVisible = true
-      this.ruleForm.data1.push(row.startTime, row.endTime)
-      this.ruleForm.title = row.title
-      this.ruleForm.subjectName = row.subjectName
-      this.ruleForm.id = row.id
-      this.ruleForm.state = row.state
-      this.ruleForm.totalScore = row.totalScore
-      this.ruleForm.subjectId = row.subjectId
-      // axios({
-      //   method: 'put',
-      //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
-      //   params: {}
-      // })
+    submitGrade(index, row) {
+      this.$router.push(`_submitgrade/${row.id}/${row.title}`)
     },
     handleTime(now) {
       const time = new Date(now)
@@ -289,21 +192,16 @@ export default {
         url: 'http://127.0.0.1:8088/contest/api/pageContest',
         params: this.query
       }).then((response) => {
-        /* this.tableData = response.data.list
-        this.tableData.forEach((item) => {
-          item.startTime = this.handleTime(item.startTime)
-          item.endTime = this.handleTime(item.endTime)
-          item.subjectId = this.subjectName(item.subjectId)
-          // console.log(Data.subjectName(item.subjectId))
-        }) */
         this.total = response.data.total
         this.tableData = response.data.list.map((item) => {
-          /*  return {
-            ...item,
-            startTime: this.handleTime(item.startTime),
-            endTime: this.handleTime(item.endTime),
-            subjectId: this.subjectName(item.subjectId)
-          } */
+          const nowTime = new Date().getTime()
+          if (nowTime < item.startTime) {
+            item.state = 1
+          } else if (nowTime > item.startTime && nowTime < item.endTime) {
+            item.state = 2
+          } else if (nowTime > item.endTime) {
+            item.state = 3
+          }
           return Object.assign(item, {
             startTime: this.handleTime(item.startTime),
             endTime: this.handleTime(item.endTime),

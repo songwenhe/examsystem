@@ -10,7 +10,7 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>热门帖子</span>
-          <el-button style="float: right; padding: 3px 0" type="danger" plain>
+          <el-button style="float: right; padding: 3px 0" type="danger" @click="postEditor" plain>
             <span><i class="el-icon-edit"></i>我要发布</span>
           </el-button>
         </div>
@@ -94,6 +94,9 @@ export default {
     ...mapMutations({
       setPostDetail: 'setPostDetail' // 将 `this.setPostDetail()` 映射为 `this.$store.commit('setPostDetail')`
     }),
+    postEditor() {
+      this.$router.push('/_frontpage/submitpost')
+    },
     pageChange(res) {
       this.query.page = res
       this.getShare()

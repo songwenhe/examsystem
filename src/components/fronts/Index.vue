@@ -58,8 +58,12 @@ export default {
     color: #dcdde1;
     transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
   }
+  .box:hover {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+  }
 }
-
 .iconfont {
   font-size: 4em;
   display: block;

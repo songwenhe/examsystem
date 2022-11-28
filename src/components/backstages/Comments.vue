@@ -1,7 +1,7 @@
 <template>
   <div class="test-container">
     <div style="height: 50px; text-align: center">
-      <el-divider><i class="el-icon-s-platform"></i>评论列表</el-divider>
+      <el-divider class="divider"><i class="el-icon-s-platform"></i>评论列表</el-divider>
     </div>
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -10,7 +10,7 @@
         <el-breadcrumb-item>评论列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-table :data="tableData" style="width: 90%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="500px">
       <el-table-column align="center" label="内容" prop="content"></el-table-column>
       <el-table-column align="center" label="回贴人" prop="name"></el-table-column>
       <el-table-column align="center" label="回帖时间" prop="createTime"></el-table-column>
@@ -184,5 +184,10 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+.divider {
+  .el-divider__text {
+    font-size: 30px;
+  }
 }
 </style>

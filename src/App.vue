@@ -13,7 +13,7 @@ export default {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #eee;
+  background-color: #fff;
   min-width: 1300px;
 }
 </style>

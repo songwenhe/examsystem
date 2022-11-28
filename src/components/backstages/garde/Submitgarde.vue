@@ -19,7 +19,7 @@
       <el-table-column align="center" label="试卷状态" prop="state"></el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="success" icon="el-icon-edit" @click="showAnswerCard(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="success" @click="showAnswerCard(scope.$index, scope.row)">批改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -133,6 +133,29 @@ export default {
       this.pageGrade()
     },
     submitCorrect() {
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8088/grade/api/finishGrade',
+        data: {
+          manulResult: this.totalScore,
+          contestId: this.$route.params.id,
+          autoResult: this.currentCard.autoResult,
+          id: this.currentCard.id
+        }
+      }).then((response) => {
+        console.log(response)
+        if (response.status === 200) {
+          if (response.data.success) {
+            this.$message.success('批改成功')
+            this.isDialogCorrect = false
+            this.currentCard = {}
+            this.getUsersByContestId()
+          }
+        } else {
+          this.$message.error('批改失败')
+        }
+      })
+
       // this.$refs.correctForm.validate(async (valid) => {
       //   if (!valid) return
       //   const { status, data } = await this.$http.post('/grade/api/finishGrade', {

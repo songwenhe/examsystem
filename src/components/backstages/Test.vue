@@ -1,7 +1,7 @@
 <template>
   <div class="test-container">
     <div style="height: 50px; text-align: center">
-      <el-divider><i class="el-icon-s-platform"></i>考试列表</el-divider>
+      <el-divider class="divider"><i class="el-icon-s-platform"></i>考试列表</el-divider>
     </div>
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -15,7 +15,7 @@
       <el-button class="el-icon-search" size="medium" @click="getContents()"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true">添加考试</el-button>
     </div>
-    <el-table :data="tableData" style="width: 90%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="500px">
       <el-table-column align="center" label="考试名称" prop="title"></el-table-column>
       <el-table-column align="center" label="开始时间" prop="startTime"></el-table-column>
       <el-table-column align="center" label="结束时间" prop="endTime"></el-table-column>
@@ -337,4 +337,13 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.test-container {
+  width: 100%;
+}
+.divider {
+  .el-divider__text {
+    font-size: 30px;
+  }
+}
+</style>

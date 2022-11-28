@@ -1,7 +1,7 @@
 <template>
   <div class="test-container">
     <div style="height: 50px; text-align: center">
-      <el-divider><i class="el-icon-s-platform"></i>用户列表</el-divider>
+      <el-divider class="divider"><i class="el-icon-s-platform"></i>用户列表</el-divider>
     </div>
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -15,7 +15,7 @@
       <el-button class="el-icon-search" size="medium" @click="getUsers"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true">添加用户</el-button>
     </div>
-    <el-table :data="tableData" style="width: 90%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="500px">
       <el-table-column align="center" label="头像" prop="ImgUrl">
         <template slot-scope="scope">
           <img :src="scope.row.ImgUrl" style="width: 60px; height: 60px" />
@@ -49,7 +49,6 @@
             :inactive-value="1"
             active-color="#13ce66"
             inactive-color="#ff4949"
-            width="40"
             active-text="开"
             inactive-text="关"
           >
@@ -73,7 +72,7 @@
       :current-page="query.page"
     ></el-pagination>
 
-    <el-dialog :visible.sync="dialogFormVisible" @close="clearForm" width="30%">
+    <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="ruleForm" label-width="100px" align="center">
         <el-upload
           class="avatar-uploader"
@@ -126,7 +125,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="dialogTableVisible" @close="clearTable" width="30%">
+    <el-dialog :visible.sync="dialogTableVisible" @close="clearTable">
       <el-form :model="ruleTable" label-width="100px" align="center">
         <el-upload
           class="avatar-uploader"
@@ -142,32 +141,32 @@
 
       <el-form :model="ruleTable" label-width="100px">
         <el-form-item label="姓名">
-          <el-input v-model="ruleTable.name" size="medium" style="width: 300px"></el-input>
+          <el-input v-model="ruleTable.name" size="medium"></el-input>
         </el-form-item>
       </el-form>
       <el-form :model="ruleTable" label-width="100px">
         <el-form-item label="账号">
-          <el-input v-model="ruleTable.username" size="medium" style="width: 300px"></el-input>
+          <el-input v-model="ruleTable.username" size="medium"></el-input>
         </el-form-item>
       </el-form>
       <el-form :model="ruleTable" label-width="100px">
         <el-form-item label="密码">
-          <el-input type="password" v-model="ruleTable.password" size="medium" style="width: 300px"></el-input>
+          <el-input type="password" v-model="ruleTable.password" size="medium"></el-input>
         </el-form-item>
       </el-form>
       <el-form :model="ruleTable" label-width="100px">
         <el-form-item label="qq">
-          <el-input v-model="ruleTable.qq" size="medium" style="width: 300px"></el-input>
+          <el-input v-model="ruleTable.qq" size="medium"></el-input>
         </el-form-item>
       </el-form>
       <el-form :model="ruleTable" label-width="100px">
         <el-form-item label="手机">
-          <el-input v-model="ruleTable.phone" size="medium" style="width: 300px"></el-input>
+          <el-input v-model="ruleTable.phone" size="medium"></el-input>
         </el-form-item>
       </el-form>
       <el-form :model="ruleTable" label-width="100px">
         <el-form-item label="邮箱">
-          <el-input v-model="ruleTable.email" size="medium" style="width: 300px"></el-input>
+          <el-input v-model="ruleTable.email" size="medium"></el-input>
         </el-form-item>
       </el-form>
       <el-form :model="ruleTable" label-width="100px">
@@ -190,9 +189,6 @@
 const axios = require('axios')
 
 export default {
-  created() {
-    this.getUsers()
-  },
   data() {
     return {
       tableData: [],
@@ -234,6 +230,9 @@ export default {
       ]
     }
   },
+  created() {
+    this.getUsers()
+  },
   methods: {
     handleAvatarSuccess1(res, file) {
       this.ruleForm.avatarImgUrl = file.name
@@ -247,7 +246,7 @@ export default {
       console.log(res, id)
       this.ruleForm.state = res
       this.ruleForm.id = id
-      this.getUsers()
+      this.putContest()
     },
     openDel(index, row) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -292,6 +291,16 @@ export default {
         url: 'http://127.0.0.1:8088/account/updateIgnoreNull',
         data: this.ruleForm
       }).then((response) => {
+        console.log(response)
+        if (response.status === 200) {
+          if (response.data.success) {
+            this.$message.success(response.data.message)
+          } else {
+            this.$message.error(response.data.message)
+          }
+        } else {
+          this.$message.error('修改失败')
+        }
         this.getUsers()
         this.clearForm()
       })
@@ -304,6 +313,15 @@ export default {
           id: Math.floor(Math.random() * 100)
         })
       }).then((response) => {
+        if (response.status === 200) {
+          if (response.data.success) {
+            this.$message.success(response.data.message)
+          } else {
+            this.$message.error(response.data.message)
+          }
+        } else {
+          this.$message.error('添加失败')
+        }
         this.getUsers()
         this.clearTable()
       })
@@ -362,6 +380,7 @@ export default {
             ImgUrl: 'http://localhost:8088/' + item.avatarImgUrl
           }
         })
+        console.log(this.tableData)
       })
     }
   }
@@ -392,5 +411,10 @@ export default {
   height: 178px;
   display: inline-block;
   vertical-align: middle;
+}
+.divider {
+  .el-divider__text {
+    font-size: 30px;
+  }
 }
 </style>

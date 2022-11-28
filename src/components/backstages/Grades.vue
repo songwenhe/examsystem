@@ -1,7 +1,7 @@
 <template>
   <div class="test-container">
     <div style="height: 50px; text-align: center">
-      <el-divider><i class="el-icon-s-platform"></i>成绩列表</el-divider>
+      <el-divider class="divider"><i class="el-icon-s-platform"></i>成绩列表</el-divider>
     </div>
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -14,7 +14,7 @@
       <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" style="width: 300px" @input="getContents()" />
       <el-button class="el-icon-search" size="medium" @click="getContents()"></el-button>
     </div>
-    <el-table :data="tableData" style="width: 90%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="500px">
       <el-table-column align="center" label="考试名称" prop="title"></el-table-column>
       <el-table-column align="center" label="开始时间" prop="startTime"></el-table-column>
       <el-table-column align="center" label="结束时间" prop="endTime"></el-table-column>
@@ -223,4 +223,10 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.divider {
+  .el-divider__text {
+    font-size: 30px;
+  }
+}
+</style>

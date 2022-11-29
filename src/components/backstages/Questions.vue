@@ -15,7 +15,7 @@
       <el-button class="el-icon-search" size="medium" @click="getQuestions()"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true">添加题目</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="600px">
       <el-table-column align="center" label="题号" prop="id"></el-table-column>
       <el-table-column align="center" label="题目" prop="title"></el-table-column>
       <el-table-column align="center" label="课程" prop="subjectName"></el-table-column>

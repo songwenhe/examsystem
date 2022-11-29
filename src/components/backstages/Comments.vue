@@ -10,7 +10,7 @@
         <el-breadcrumb-item>评论列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-table :data="tableData" style="width: 100%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="600px">
       <el-table-column align="center" label="内容" prop="content"></el-table-column>
       <el-table-column align="center" label="回贴人" prop="name"></el-table-column>
       <el-table-column align="center" label="回帖时间" prop="createTime"></el-table-column>

@@ -15,7 +15,7 @@
       <el-button class="el-icon-search" size="medium" @click="getSubjects()"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true">添加科目</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="600px">
       <el-table-column align="center" label="#" prop="id"></el-table-column>
       <el-table-column align="center" label="课程名称" prop="name"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime"></el-table-column>

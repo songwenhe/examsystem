@@ -1,44 +1,45 @@
 <template>
   <div id="backstagepage">
-    <el-container>
-      <el-aside :width="isCollapse ? '64px' : '260px'">
+    <el-container style="height: 100%">
+      <el-aside :width="isCollapse ? '60px' : '200px'">
         <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
             <el-radio-button :label="false">1</el-radio-button>
             <el-radio-button :label="true">1</el-radio-button>
           </el-radio-group> -->
         <el-menu
+          background-color="#304156"
           :router="true"
-          :collapse-transition="false"
+          :collapse-transition="true"
           :collapse="isCollapse"
           :default-active="index"
-          class="el-menu-vertical-demo"
+          class="el-menu-vertical-demo nav"
           @select="slt"
         >
-          <el-menu-item index="/_backstagepage/_contests">
+          <el-menu-item index="/_backstagepage/_contests" class="nav-item">
             <i class="el-icon-s-platform"></i>
             <span slot="title">考试管理</span>
           </el-menu-item>
-          <el-menu-item index="/_backstagepage/_questions">
+          <el-menu-item index="/_backstagepage/_questions" class="nav-item">
             <i class="el-icon-s-claim"></i>
             <span slot="title">题目管理</span>
           </el-menu-item>
-          <el-menu-item index="/_backstagepage/_subjects">
+          <el-menu-item index="/_backstagepage/_subjects" class="nav-item">
             <i class="el-icon-s-order"></i>
             <span slot="title">科目管理</span>
           </el-menu-item>
-          <el-menu-item index="/_backstagepage/_grades">
+          <el-menu-item index="/_backstagepage/_grades" class="nav-item">
             <i class="el-icon-s-data"></i>
             <span slot="title">成绩管理</span>
           </el-menu-item>
-          <el-menu-item index="/_backstagepage/_user">
+          <el-menu-item index="/_backstagepage/_user" class="nav-item">
             <i class="el-icon-user-solid"></i>
             <span slot="title">用户管理</span>
           </el-menu-item>
-          <el-menu-item index="/_backstagepage/_posts">
+          <el-menu-item index="/_backstagepage/_posts" class="nav-item">
             <i class="el-icon-info"></i>
             <span slot="title">帖子管理</span>
           </el-menu-item>
-          <el-menu-item index="/_backstagepage/_comments">
+          <el-menu-item index="/_backstagepage/_comments" class="nav-item">
             <i class="el-icon-s-promotion"></i>
             <span slot="title">评论管理</span>
           </el-menu-item>
@@ -53,8 +54,8 @@
           <!-- <li><img src="@/assets/logo.495bc594.png" alt="" /></li> -->
           <!-- <li>成都东软学院考试平台控制台</li> -->
           <div class="right">
-            <img src="@/assets/th.jpg" alt="" class="img" />
-            <el-dropdown @command="handleCommand">
+            <img :src="userImg" alt="" class="img" />
+            <el-dropdown @command="handleCommand" class="drop">
               <span class="el-dropdown-link">{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="center">个人中心</el-dropdown-item>
@@ -71,18 +72,23 @@
   </div>
 </template>
 <script>
+const axios = require('axios')
 export default {
   name: 'backstagepage',
   data() {
     return {
+      userImg: 'string',
       userName: 'string',
+      userId: 0,
       isCollapse: false,
       index: ''
     }
   },
   created() {
     this.userName = localStorage.getItem('userName')
+    this.userId = localStorage.getItem('userId')
     this.index = localStorage.getItem('index')
+    this.getUser()
   },
   methods: {
     toToggleMenu() {
@@ -96,19 +102,27 @@ export default {
       if (command === 'quit') {
         this.$router.push('/_login')
       }
+    },
+    getUser() {
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8088/account/getById',
+        params: { id: this.userId }
+      }).then((response) => {
+        this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
+      })
     }
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .header {
   display: flex;
-  color: #333;
+  color: #fff;
   margin-bottom: 10px;
   text-align: center;
   line-height: 60px;
-  /* x 偏移量 | y 偏移量 | 阴影模糊半径 | 阴影扩散半径 | 阴影颜色 */
-  box-shadow: 0px 3px 2px 2px rgba(0, 0, 0, 0.3);
+  background-color: #409eff;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -126,10 +140,13 @@ export default {
     margin-right: 10px;
     height: 90%;
   }
+  .drop {
+    margin-right: 20px;
+  }
 }
 .toggle-menu {
   // width: 100%;
-  color: #6c5ce7;
+  color: #fff;
   text-align: center;
   padding: 10px;
   letter-spacing: 0.2em;
@@ -154,14 +171,29 @@ body > .el-container {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  height: 100%;
 }
 
 .el-dropdown-link {
   cursor: pointer;
-  color: #409eff;
+  color: #fff;
 }
 
 .el-icon-arrow-down {
   font-size: 12px;
+}
+.nav {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  // justify-content: space-evenly;
+  .nav-item {
+    color: #bfcbd9;
+    display: flex;
+    // flex: 1;
+    // height: 100px;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

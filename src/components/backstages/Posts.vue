@@ -17,7 +17,7 @@
       <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" class="inputSearch" style="width: 300px" />
       <el-button class="el-icon-search" size="medium" @click="searchType(value)"></el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="600px">
       <el-table-column align="center" label="标题" prop="title"></el-table-column>
       <el-table-column align="center" label="发布者" prop="authorId"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime"></el-table-column>

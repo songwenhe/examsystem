@@ -15,7 +15,7 @@
       <el-button class="el-icon-search" size="medium" @click="getContents()"></el-button>
       <el-button size="medium" type="success" @click="dialogTableVisible = true">添加考试</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" max-height="500px">
+    <el-table :data="tableData" style="width: 100%" max-height="600px">
       <el-table-column align="center" label="考试名称" prop="title"></el-table-column>
       <el-table-column align="center" label="开始时间" prop="startTime"></el-table-column>
       <el-table-column align="center" label="结束时间" prop="endTime"></el-table-column>

@@ -25,21 +25,43 @@
         </el-col>
       </el-row>
     </div>
-    <div>
-      <el-card class="box-card">
+    <div class="postContent">
+      <el-card shadow="always">
         <div v-html="post.htmlContent"></div>
       </el-card>
     </div>
     <div><el-divider></el-divider></div>
-    <p>
-      <i class="el-icon-chat-dot-round">回复({{ post.replyNum }})</i>
-    </p>
-    <div>
-      <div v-for="i in comments" :key="i.id">
-        <div><span></span></div>
-        <div>{{ i.content }}</div>
-        <!-- <a href="javascript:;" @click.prevent="">回复</a> -->
-        <a href="" @click.prevent="$router.push('')">回复</a>
+    <div class="reply">
+      <div>
+        <p>
+          <i class="el-icon-chat-dot-round">回复({{ post.replyNum }})</i>
+        </p>
+      </div>
+      <div>
+        <el-row v-for="item in comments" :key="item.id">
+          <el-col :span="1">
+            <el-avatar shape="square" :size="36"></el-avatar>
+          </el-col>
+          <el-col :span="23">
+            <a href="javascript:;" class="author">{{ item.user }}</a>
+            <span class="replyDate"></span>
+            <div class="text">{{ item.content }}</div>
+            <a href="javascript:;" class="actions" @click="showTextarea(item.id)">回复</a>
+            <!-- <div>--{{ item.replies }}--</div> -->
+            <div class="comments">
+              <el-row v-for="reply in item.replies" :key="reply.id">
+                <el-col :span="1">
+                  <el-avatar shape="square" :size="36"></el-avatar>
+                </el-col>
+                <el-col class="info" :span="15">
+                  <a href="javascript:;" class="author">{{ reply.user }}</a>
+                  <span class="replyDate">{{ reply.createTime | formatDate }}</span>
+                  <div class="text">{{ reply.content }}</div>
+                </el-col>
+              </el-row>
+            </div>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
@@ -50,15 +72,16 @@ import axios from 'axios'
 import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
-    return {
-      post: {},
-      userName: '',
-      comments: []
-    }
+    return { replies: [], post: {}, userName: '', comments: [] }
   },
   computed: mapState({
     postDetail: (state) => state.postDetail
   }),
+  created() {
+    this.userName = localStorage.getItem('userName')
+    this.post = this.postDetail
+    this.getComments()
+  },
   methods: {
     handleTime(now) {
       const time = new Date(now)
@@ -77,26 +100,66 @@ export default {
       res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
       return res
     },
-    getComment() {
-      axios({
+    async getComments() {
+      const response = await axios({
         method: 'post',
         url: 'http://127.0.0.1:8088/reply/api/getCommentsByPostId',
-        params: { postId: this.post.id }
-      }).then((response) => {
-        this.comments = response.data
+        params: { postId: this.postDetail.id }
       })
+      //   .then((response) => {
+      console.log(response)
+      this.comments = response.data
+      response.data.forEach((item, index) => {
+        this.getReplys(item.id, index)
+        this.getUserById(item.userId, index)
+      })
+      // })
+    },
+    async getReplys(id, i) {
+      const res = await axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8088/reply/getReplysByCommentId',
+        params: { commentId: id }
+      })
+      //   .then((res) => {
+      this.comments[i].replies = res.data
+      res.data.forEach((item, index) => {
+        this.getUserById(item.userId, index, i)
+      })
+      // })
+    },
+    async getUserById(userId, index, i) {
+      const res = await axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8088/account/getById',
+        params: { id: userId }
+      })
+      if (res.status === 200) {
+        if (i !== undefined) {
+          if (res.data !== '') {
+            console.log(this.comments[i])
+            this.comments[i].replies[index].user = res.data.name
+          } else {
+            this.comments[i].replies[index].user = '已注销'
+          }
+        } else {
+          this.comments[index].user = res.data.name
+        }
+      }
     }
-  },
-  created() {
-    this.userName = localStorage.getItem('userName')
-    this.post = this.postDetail
-    this.getComment()
-    console.log(this.post)
   }
 }
 </script>
 
 <style lang="less" scoped>
+.author {
+  text-decoration: none;
+}
+.share-container {
+  padding: 20px;
+  width: 1300px;
+}
+
 .title {
   i {
     margin-right: 6px;
@@ -180,5 +243,9 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.postContent {
+  margin: 40px 0;
+  letter-spacing: 0.1em;
 }
 </style>

@@ -255,6 +255,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.contests-container {
+  padding: 20px;
+  width: 1300px;
+}
 .el-main {
   padding: 0 20px;
 }

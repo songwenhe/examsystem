@@ -1,7 +1,36 @@
 <template>
   <div class="frontpage-container">
     <el-container>
-      <el-main class="frontpage">
+      <el-header class="f-header">
+        <div class="title">在线考试系统</div>
+        <el-menu
+          text-color="#f1f2f6"
+          background-color="#00162a"
+          mode="horizontal"
+          :router="true"
+          active-text-color="#409eff"
+          :collapse-transition="false"
+          :default-active="index"
+          @select="slt"
+          class="el-menu-demo nav"
+        >
+          <el-menu-item index="/_frontpage/index">首页</el-menu-item>
+          <el-menu-item index="/_frontpage/contest">在线评测</el-menu-item>
+          <el-menu-item index="/_frontpage/subject">科目学习</el-menu-item>
+          <el-menu-item index="/_frontpage/shares">分享中心</el-menu-item>
+        </el-menu>
+        <div class="usermenu">
+          <img src="@/assets/th.jpg" alt="" height="90%" class="img" />
+          <el-dropdown @command="handleCommand" size="medium" class="drop">
+            <span class="el-dropdown-link">{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="center">个人中心</el-dropdown-item>
+              <el-dropdown-item command="quit">退出系统</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </el-header>
+      <el-main class="main">
         <router-view></router-view>
       </el-main>
       <el-footer class="footer" height="auto">
@@ -13,13 +42,53 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      userName: '',
+      index: ''
+    }
+  },
+  created() {
+    this.userName = localStorage.getItem('userName')
+    this.index = localStorage.getItem('index')
+  },
+  methods: {
+    slt(evt) {
+      localStorage.setItem('index', evt)
+      this.index = localStorage.getItem('index')
+    },
+    handleCommand(command) {
+      if (command === 'quit') {
+        this.$router.push('/_login')
+      } else if (command === 'center') {
+        this.index = ''
+        this.$router.push('/_frontpage/users')
+      }
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
 a {
   text-decoration: none;
 }
+.title {
+  font-size: 20px;
+  width: 300px;
+  line-height: 60px;
+  text-align: center;
+}
+.f-header {
+  background-color: #00162a;
+  justify-content: space-between;
+  display: flex;
+  color: #f1f2f6;
+}
+// .is-active {
+//   background-color: #409eff;
+// }
 .frontpage-container {
   min-width: 1300px;
   display: flex;
@@ -32,7 +101,31 @@ a {
     justify-content: center;
   }
 }
+
+.main {
+  padding: 0;
+  margin: auto;
+}
+.nav {
+  margin-left: auto;
+}
 .footer {
   text-align: center;
+}
+.main-container {
+  min-width: 1300px;
+  background-color: #fff;
+}
+.usermenu {
+  display: flex;
+  align-items: center;
+  .img {
+    margin-right: 10px;
+    border-radius: 30px;
+  }
+  .drop {
+    color: #f1f2f6;
+    margin-right: 20px;
+  }
 }
 </style>

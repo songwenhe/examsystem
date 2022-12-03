@@ -2,7 +2,7 @@
   <div class="subjects-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/_frontpage/index' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>科目学习</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -104,6 +104,7 @@ export default {
 <style lang="less" scoped>
 .subjects-container {
   min-width: 1300px;
+  padding: 20px;
 }
 .cart-detail {
   position: absolute;

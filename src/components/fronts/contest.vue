@@ -2,7 +2,7 @@
   <div class="contest-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/_frontpage/index' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>在线评测</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -135,6 +135,7 @@ export default {
 
 <style lang="less" scoped>
 .contest-container {
+  padding: 20px;
   min-width: 1300px;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="contest-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/_frontpage/index' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>分享中心</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -15,15 +15,21 @@
           </el-button>
         </div>
         <div v-for="i in tableData" :key="i.id" class="text item">
-          <a href="javascript:;" @click="toPost(i)">
-            <h3>{{ i.title }}</h3>
-          </a>
-          <p>
-            <span>{{ i.authorId }}</span>
-            <span>{{ i.createTime }}<em>发表在[我要提问]</em></span>
-            <span><em>最后回复时间:</em>{{ i.lastReplyTime }}</span>
-          </p>
-          <p class="icons"><i class="el-icon-chat-dot-round"></i>{{ i.replyNum }}</p>
+          <div>
+            <a href="javascript:;" @click="toPost(i)" class="title">
+              <h3>{{ i.title }}</h3>
+            </a>
+            <p>
+              <span class="time">{{ i.userName }}</span>
+              <span class="time">{{ i.createTime }}<em>发表在[我要提问]</em></span>
+              <span class="time"><em>最后回复时间:</em>{{ i.lastReplyTime }}</span>
+            </p>
+          </div>
+          <div class="icons">
+            <p><i class="el-icon-chat-dot-round"></i>{{ i.replyNum }}</p>
+            <p><i class="el-icon-thumb"></i>{{ i.replyNum }}</p>
+            <p><i class="el-icon-view"></i>{{ i.replyNum }}</p>
+          </div>
         </div>
       </el-card>
       <el-pagination
@@ -76,9 +82,15 @@ export default {
   data() {
     return {
       total: 0,
+      pageUsers: [],
       tableData: [],
       query: {
         size: 10,
+        page: 1,
+        keyword: ''
+      },
+      query1: {
+        size: 999,
         page: 1,
         keyword: ''
       }
@@ -88,7 +100,7 @@ export default {
     postDetail: (state) => state.postDetail
   }),
   created() {
-    this.getShare()
+    this.getUsers()
   },
   methods: {
     ...mapMutations({
@@ -129,7 +141,8 @@ export default {
           return Object.assign(item, {
             createTime: this.handleTime(item.createTime),
             updateTime: this.handleTime(item.updateTime),
-            lastReplyTime: this.handleTime(item.lastReplyTime)
+            lastReplyTime: this.handleTime(item.lastReplyTime),
+            userName: this.getUserName(item.authorId)
           })
         })
       })
@@ -137,17 +150,44 @@ export default {
     toPost(post) {
       this.setPostDetail(post)
       this.$router.push('/_frontpage/share/' + post.id)
+    },
+    getUsers() {
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8088/account/pageAccount',
+        data: this.query1
+      }).then((response) => {
+        this.pageUsers = response.data.list
+        this.getShare()
+      })
+    },
+    getUserName(id) {
+      let user = this.pageUsers.find((item) => id === item.id)
+      if (user !== undefined) return user.name
+      else return '已注销'
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.title {
+  text-decoration: none;
+}
+.time {
+  margin-right: 10px;
+}
+.title:hover {
+  color: red;
+}
 .contest-container {
+  padding: 20px;
   min-width: 1300px;
 }
 .icons {
-  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
   bottom: 20px;
   right: 0;
 }
@@ -159,6 +199,9 @@ export default {
 }
 
 .item {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
   margin-bottom: 18px;
 }
 

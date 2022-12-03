@@ -15,14 +15,15 @@ function getItem(key) {
 }
 export default new Vuex.Store({
   state: {
-    postDetail: {},
+    postDetail: getItem('post'),
     contest: getItem('currentContest'),
-    problem: {}
+    problem: getItem('problem')
   },
   getters: {},
   mutations: {
     setPostDetail(state, payload) {
       state.postDetail = payload
+      setItem('post', payload)
     },
     setContest(state, payload) {
       state.contest = payload
@@ -30,6 +31,7 @@ export default new Vuex.Store({
     },
     setProblem(state, payload) {
       state.problem = payload
+      setItem('problem', payload)
     }
   },
   actions: {},

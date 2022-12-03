@@ -28,30 +28,24 @@ const routes = [
     component: () => import('@/components/Frontpage'),
     redirect: '/_frontpage/index',
     children: [
-      { path: 'index', component: () => import('@/components/fronts/Index') },
+      { path: '/_frontpage/index', component: () => import('@/components/fronts/Index') },
+      { path: '/_frontpage/contest', component: () => import('@/components/fronts/Contest') },
+      { path: '/_frontpage/subject', component: () => import('@/components/fronts/Sub') },
+      { path: '/_frontpage/shares', component: () => import('@/components/fronts/Shares') },
+      { path: '/_frontpage/subs/:id', component: () => import('@/components/fronts/subs/Subs') },
+      { path: '/_frontpage/problem/:id', component: () => import('@/components/fronts/subs/Problem') },
+      { path: '/_frontpage/share/:id', component: () => import('@/components/fronts/posts/Share') },
+      { path: '/_frontpage/contests/:id/:contestName', component: () => import('@/components/fronts/contests/Contests') },
+      { path: '/_frontpage/submitpost', component: () => import('@/components/fronts/posts/submitPost') },
       {
-        path: 'main',
-        component: () => import('@/components/fronts/Main'),
+        path: '/_frontpage/users',
+        component: () => import('@/components/fronts/users/Users'),
+        redirect: '/_frontpage/users/person',
         children: [
-          { path: '/_frontpage/contest', component: () => import('@/components/fronts/Contest') },
-          { path: '/_frontpage/subject', component: () => import('@/components/fronts/Sub') },
-          { path: '/_frontpage/shares', component: () => import('@/components/fronts/Shares') },
-          { path: '/_frontpage/subs/:id', component: () => import('@/components/fronts/subs/Subs') },
-          { path: '/_frontpage/problem/:id', component: () => import('@/components/fronts/subs/Problem') },
-          { path: '/_frontpage/share/:id', component: () => import('@/components/fronts/posts/Share') },
-          { path: '/_frontpage/contests/:id/:contestName', component: () => import('@/components/fronts/contests/Contests') },
-          { path: '/_frontpage/submitpost', component: () => import('@/components/fronts/posts/submitPost') },
-          {
-            path: '/_frontpage/users',
-            component: () => import('@/components/fronts/users/Users'),
-            redirect: '/_frontpage/users/person',
-            children: [
-              { path: 'person', component: () => import('@/components/fronts/users/Person') },
-              { path: 'password', component: () => import('@/components/fronts/users/Password') },
-              { path: 'exam', component: () => import('@/components/fronts/users/Exam') },
-              { path: 'mypost', component: () => import('@/components/fronts/users/Mypost') }
-            ]
-          }
+          { path: 'person', component: () => import('@/components/fronts/users/Person') },
+          { path: 'password', component: () => import('@/components/fronts/users/Password') },
+          { path: 'exam', component: () => import('@/components/fronts/users/Exam') },
+          { path: 'mypost', component: () => import('@/components/fronts/users/Mypost') }
         ]
       }
     ]

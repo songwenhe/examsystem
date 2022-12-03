@@ -52,4 +52,7 @@ export default {
 .box-card {
   margin: 20px;
 }
+.users-container {
+  width: 1300px;
+}
 </style>

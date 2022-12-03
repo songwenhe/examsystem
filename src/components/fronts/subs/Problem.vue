@@ -125,6 +125,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.problem-container {
+  padding: 20px;
+  width: 1300px;
+}
 .answerArea {
   padding: 20px 0;
   padding-left: 20px;

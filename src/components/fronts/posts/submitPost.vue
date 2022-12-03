@@ -2,7 +2,7 @@
   <div class="submitPost-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/_frontpage/index' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>分享中心</el-breadcrumb-item>
         <el-breadcrumb-item>文章发布</el-breadcrumb-item>
       </el-breadcrumb>
@@ -105,6 +105,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.submitPost-container {
+  padding: 20px;
+  width: 1300px;
+}
 .editor {
   height: 400px;
 }

@@ -2,12 +2,12 @@
   <div class="subs-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/_frontpage/index' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>科目学习</el-breadcrumb-item>
         <el-breadcrumb-item>{{ subName.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-table :data="tableData" style="width: 90%" empty-text>
+    <el-table :data="tableData" style="width: 100%" empty-text>
       <el-table-column align="center" label="题号" prop="id"></el-table-column>
       <el-table-column align="center" label="题目" prop="title"></el-table-column>
       <el-table-column align="center" label="难度" prop="difficulty">
@@ -115,4 +115,9 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.subs-container {
+  padding: 20px;
+  width: 1300px;
+}
+</style>

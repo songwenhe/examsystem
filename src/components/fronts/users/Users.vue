@@ -3,7 +3,7 @@
     <el-container>
       <el-aside width="280px">
         <el-card class="box-card">
-          <img src="@/assets/logo.495bc594.png" alt="" />
+          <img :src="ruleForm.ImgUrl" alt="" />
         </el-card>
         <el-card class="box-card">
           <h4>宋文禾</h4>
@@ -39,10 +39,41 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
-      index: ''
+      userId: 0,
+      tableData: [],
+      ruleForm: {},
+      index: '',
+      query: {
+        page: 1,
+        size: 999,
+        keyword: ''
+      }
+    }
+  },
+  created() {
+    this.userId = parseInt(localStorage.getItem('userId'))
+    this.getAccount()
+  },
+  methods: {
+    getAccount() {
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8088/account/pageAccount',
+        data: this.query
+      }).then((response) => {
+        this.tableData = response.data.list.map((item) => {
+          return {
+            ...item,
+            ImgUrl: 'http://localhost:8088/' + item.avatarImgUrl
+          }
+        })
+        this.ruleForm = this.tableData.find((item) => this.userId === item.id)
+        console.log(this.ruleForm)
+      })
     }
   }
 }

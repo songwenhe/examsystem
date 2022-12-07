@@ -49,11 +49,12 @@
         <el-header class="header">
           <div class="left">
             <div class="toggle-menu" @click="toToggleMenu"><i class="el-icon-s-fold"></i></div>
-            <div>成都东软学院考试平台控制台</div>
+            <div>在线考试平台控制台</div>
           </div>
           <!-- <li><img src="@/assets/logo.495bc594.png" alt="" /></li> -->
           <!-- <li>成都东软学院考试平台控制台</li> -->
           <div class="right">
+            <el-button type="text" class="front" @click="toFront"><i class="el-icon-monitor"></i>访问前台</el-button>
             <img :src="userImg" alt="" class="img" />
             <el-dropdown @command="handleCommand" class="drop">
               <span class="el-dropdown-link">{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i></span>
@@ -103,6 +104,9 @@ export default {
         this.$router.push('/_login')
       }
     },
+    toFront() {
+      this.$router.push('/_frontpage')
+    },
     getUser() {
       axios({
         method: 'get',
@@ -128,6 +132,10 @@ export default {
   margin: 0;
   height: 60px;
   justify-content: space-between;
+  .front {
+    color: #fff;
+    margin-right: 20px;
+  }
   .left {
     display: flex;
     align-items: center;

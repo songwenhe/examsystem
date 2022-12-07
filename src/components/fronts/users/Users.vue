@@ -3,7 +3,7 @@
     <el-container>
       <el-aside width="280px">
         <el-card class="box-card">
-          <img :src="ruleForm.ImgUrl" alt="" />
+          <img :src="ruleForm.ImgUrl" alt="" class="img" />
         </el-card>
         <el-card class="box-card">
           <h4>宋文禾</h4>
@@ -80,6 +80,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.img {
+  border-radius: 50%;
+}
 .box-card {
   margin: 20px;
 }

@@ -1,15 +1,17 @@
 <template>
   <div class="mypost-container">
     <el-card class="box-card" shadow>
-      <el-divider content-position="left"><i class="el-icon-chat-dot-square" style="font-size: 20px">个人信息</i></el-divider>
-      <div v-for="i in tableData" :key="i">
-        <a href="" class="title">
+      <el-divider content-position="left"><i class="el-icon-chat-dot-square" style="font-size: 20px">我的发帖</i></el-divider>
+      <div v-for="i in tableData" :key="i" class="post">
+        <a href="javascript:" class="title">
           <h4>{{ i.title }}</h4>
         </a>
-        <span>
-          <i class="el-icon-chat-line-round">{{ i.replyNum }}</i>
-        </span>
-        <span class="createTime">发布于：{{ i.createTime }}</span>
+        <div class="createTime">
+          <span>
+            <i class="el-icon-chat-line-round">{{ i.replyNum }}</i>
+          </span>
+          <span>发布于：{{ i.createTime }}</span>
+        </div>
       </div>
       <el-pagination
         @current-change="pageChange"
@@ -82,11 +84,13 @@ export default {
 
 <style lang="less" scoped>
 .createTime {
-  float: right;
   font-size: 14px;
   color: #999;
+  display: flex;
+  justify-content: space-between;
 }
 .title {
+  text-decoration: none;
   font-size: 22px;
   margin: 10px 0;
 }

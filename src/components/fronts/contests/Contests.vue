@@ -66,13 +66,13 @@
               <span>当前考生：</span><span>{{ userName }}</span>
             </dd>
             <dd>
-              <span>开始时间：</span><span>{{ contestData.createTime }}</span>
+              <span>开始时间：</span><span> {{ contestData.createTime }}</span>
             </dd>
             <dd>
               <span>结束时间：</span><span>{{ contestData.updateTime }}</span>
             </dd>
             <dd>
-              <span>总分：</span><span>{{ contestData.totalScore }}</span>
+              <span class="last">总分：</span><span> {{ contestData.totalScore }}</span>
             </dd>
           </dl>
         </el-card>

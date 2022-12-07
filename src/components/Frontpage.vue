@@ -121,7 +121,7 @@ a {
   align-items: center;
   .img {
     margin-right: 10px;
-    border-radius: 30px;
+    border-radius: 50%;
   }
   .drop {
     color: #f1f2f6;

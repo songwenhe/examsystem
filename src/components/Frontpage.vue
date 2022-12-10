@@ -20,7 +20,7 @@
           <el-menu-item index="/_frontpage/shares">分享中心</el-menu-item>
         </el-menu>
         <div class="usermenu">
-          <img src="@/assets/th.jpg" alt="" height="90%" class="img" />
+          <img :src="userImg" alt="" class="img" />
           <el-dropdown @command="handleCommand" size="medium" class="drop">
             <span class="el-dropdown-link">{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i></span>
             <el-dropdown-menu slot="dropdown">
@@ -46,11 +46,13 @@ export default {
   data() {
     return {
       userName: '',
-      index: ''
+      index: '',
+      userImg: ''
     }
   },
   created() {
     this.userName = localStorage.getItem('userName')
+    this.userId = localStorage.getItem('userId')
     this.index = localStorage.getItem('index')
   },
   methods: {
@@ -65,6 +67,15 @@ export default {
         this.index = ''
         this.$router.push('/_frontpage/users')
       }
+    },
+    getUser() {
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8088/account/getById',
+        params: { id: this.userId }
+      }).then((response) => {
+        this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
+      })
     }
   }
 }
@@ -122,6 +133,7 @@ a {
   .img {
     margin-right: 10px;
     border-radius: 50%;
+    width: 100%;
   }
   .drop {
     color: #f1f2f6;

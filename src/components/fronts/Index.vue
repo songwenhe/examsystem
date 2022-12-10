@@ -93,6 +93,10 @@ export default {
     this.getUsers()
   },
   methods: {
+    pageChange(res) {
+      this.query.page = res
+      this.getUsers()
+    },
     async getShare() {
       const response = await axios({
         method: 'get',

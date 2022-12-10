@@ -81,6 +81,7 @@ export default {
 
 <style lang="less" scoped>
 .img {
+  width: 100%;
   border-radius: 50%;
 }
 .box-card {

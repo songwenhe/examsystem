@@ -1,45 +1,41 @@
 <template>
   <div class="index-container">
     <el-container>
-      <el-main>
+      <el-main class="mian">
         <el-carousel indicator-position="outside">
-          <el-carousel-item v-for="item in 3" :key="item">
-            <h3>{{ item }}</h3>
+          <el-carousel-item v-for="item in img" :key="item">
+            <img :src="item.imgUrl" alt="" class="carouselImg">
           </el-carousel-item>
         </el-carousel>
-        <div v-for="i in tableData" :key="i.id" class="text item">
-          <div>
-            <a href="javascript:;" @click="toPost(i)" class="title">
-              <h3>{{ i.title }}</h3>
-            </a>
-            <p>
-              <span class="time">{{ i.userName }}</span>
-              <span class="time">{{ i.createTime }}<em>发表在[我要提问]</em></span>
-              <span class="time"><em>最后回复时间:</em>{{ i.lastReplyTime }}</span>
-            </p>
-          </div>
-          <div class="icons">
-            <p><i class="el-icon-chat-dot-round"></i>{{ i.replyNum }}</p>
-            <p><i class="el-icon-thumb"></i>{{ i.replyNum }}</p>
-            <p><i class="el-icon-view"></i>{{ i.replyNum }}</p>
-          </div>
-        </div>
-        <el-pagination
-          @current-change="pageChange"
-          :page-size="query.size"
-          :pager-count="11"
-          layout="prev, pager, next"
-          :total="total"
-          style="margin-left: 0px"
-          :current-page="query.page"
-        ></el-pagination>
+        <el-row>
+          <el-col v-for="item in tableData" :key="item.id">
+            <el-card class="post">
+              <div><img src="@/assets/github.png" alt="" class="postImg" /></div>
+              <div class="postDetail">
+                <p class="postTitle">{{ item.title }}</p>
+                <div v-html="item.htmlContent" class="content"></div>
+                <div class="view">
+                  <div class="reply">
+                    <span><i class="el-icon-time"></i>{{ item.createTime }}</span>
+                    <span><i class="el-icon-view"></i>浏览({{ item.replyNum }})</span>
+                    <span><i class="el-icon-chat-round"></i>评论({{ item.replyNum }})</span>
+                  </div>
+                  <el-button type="success" class="button">阅读全文</el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+          :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
       </el-main>
       <el-aside width="400px">
         <el-row class="row-bg">
           <el-col :span="24">
             <el-card class="description">
               <div>
-                <span><i class="el-icon-s-home"></i></span><el-divider direction="vertical"></el-divider><span>关于我</span>
+                <span><i class="el-icon-s-home"></i></span><el-divider
+                  direction="vertical"></el-divider><span>关于我</span>
               </div>
               <el-divider></el-divider>
               <div class="anvter">
@@ -86,7 +82,14 @@ export default {
         size: 999,
         page: 1,
         keyword: ''
-      }
+      },
+      img: [{
+        imgUrl: require('@/assets/img-1.png')
+      }, {
+        imgUrl: require('@/assets/img-2.png')
+      }, {
+        imgUrl: require('@/assets/img-3.png')
+      }]
     }
   },
   created() {
@@ -149,9 +152,56 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.carouselImg {
+  width: 100%;
+  height: 100%;
+}
+
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
+}
+
+.post {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 10px;
+
+  // height: 300px;
+  .postImg {
+    height: 90%;
+    width: 100px;
+  }
+
+
+  .postDetail {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .postTitle {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .content {
+      height: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .view {
+      display: flex;
+      justify-content: space-between;
+
+      .reply span {
+        margin-right: 10px;
+      }
+    }
+  }
+
 }
 
 .description {
@@ -159,18 +209,22 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .img {
       width: 120px;
       height: 120px;
       border-radius: 50%;
     }
+
+    .title {
+      font-size: 12px;
+    }
   }
-  .title {
-    font-size: 12px;
-  }
+
   .social {
     display: flex;
     justify-content: space-around;
+
     .icons {
       width: 20px;
       height: 20px;
@@ -180,28 +234,6 @@ export default {
 }
 
 .index-container {
-  min-width: 1600px;
-}
-.title {
-  text-decoration: none;
-}
-.item {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  margin-bottom: 18px;
-}
-.time {
-  margin-right: 10px;
-}
-.icons {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  bottom: 20px;
-  right: 0;
-}
-.icons i {
-  padding: 0 4px;
+  max-width: 1600px;
 }
 </style>

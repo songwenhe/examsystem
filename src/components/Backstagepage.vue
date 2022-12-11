@@ -78,15 +78,14 @@ export default {
   name: 'backstagepage',
   data() {
     return {
-      userImg: 'string',
-      userName: 'string',
+      userImg: '',
+      userName: '',
       userId: 0,
       isCollapse: false,
       index: ''
     }
   },
   created() {
-    this.userName = localStorage.getItem('userName')
     this.userId = localStorage.getItem('userId')
     this.index = localStorage.getItem('index')
     this.getUser()
@@ -107,14 +106,14 @@ export default {
     toFront() {
       this.$router.push('/_frontpage')
     },
-    getUser() {
-      axios({
+    async getUser() {
+      const response = await axios({
         method: 'get',
         url: 'http://127.0.0.1:8088/account/getById',
         params: { id: this.userId }
-      }).then((response) => {
-        this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
       })
+      this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
+      this.userName = response.data.name
     }
   }
 }
@@ -145,6 +144,7 @@ export default {
     align-items: center;
   }
   .img {
+    border-radius: 50%;
     margin-right: 10px;
     height: 90%;
   }

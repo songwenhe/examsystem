@@ -42,6 +42,7 @@
 </template>
 
 <script>
+const axios = require('axios')
 export default {
   data() {
     return {
@@ -51,9 +52,9 @@ export default {
     }
   },
   created() {
-    this.userName = localStorage.getItem('userName')
     this.userId = localStorage.getItem('userId')
     this.index = localStorage.getItem('index')
+    this.getUser()
   },
   methods: {
     slt(evt) {
@@ -68,14 +69,14 @@ export default {
         this.$router.push('/_frontpage/users')
       }
     },
-    getUser() {
-      axios({
+    async getUser() {
+      const response = await axios({
         method: 'get',
         url: 'http://127.0.0.1:8088/account/getById',
         params: { id: this.userId }
-      }).then((response) => {
-        this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
       })
+      this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
+      this.userName = response.data.name
     }
   }
 }
@@ -119,6 +120,7 @@ a {
 }
 .nav {
   margin-left: auto;
+  margin-right: 30px;
 }
 .footer {
   text-align: center;
@@ -130,14 +132,14 @@ a {
 .usermenu {
   display: flex;
   align-items: center;
+  height: 100%;
   .img {
+    height: 90%;
     margin-right: 10px;
     border-radius: 50%;
-    width: 100%;
   }
   .drop {
     color: #f1f2f6;
-    margin-right: 20px;
   }
 }
 </style>

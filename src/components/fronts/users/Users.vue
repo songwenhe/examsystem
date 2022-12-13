@@ -1,14 +1,14 @@
 <template>
   <div class="users-container">
     <el-container>
-      <el-aside width="280px">
+      <el-aside>
         <el-card class="box-card">
           <img :src="ruleForm.ImgUrl" alt="" class="img" />
         </el-card>
         <el-card class="box-card">
-          <h4>宋文禾</h4>
-          <span><i class="el-icon-s-promotion">songwenhe1997@qq.com</i></span>
-          <p>暂时没有任何信息</p>
+          <h4>{{ ruleForm.name }}</h4>
+          <span><i class="el-icon-message">{{ ruleForm.email }}</i></span>
+          <p>{{ ruleForm.description ? ruleForm.description : '暂无任何信息' }}</p>
         </el-card>
         <el-card class="box-card">
           <el-menu class="el-menu-vertical-demo" :router="true" :default-active="index">
@@ -59,21 +59,19 @@ export default {
     this.getAccount()
   },
   methods: {
-    getAccount() {
-      axios({
+    async getAccount() {
+      const response = await axios({
         method: 'post',
         url: 'http://127.0.0.1:8088/account/pageAccount',
         data: this.query
-      }).then((response) => {
-        this.tableData = response.data.list.map((item) => {
-          return {
-            ...item,
-            ImgUrl: 'http://localhost:8088/' + item.avatarImgUrl
-          }
-        })
-        this.ruleForm = this.tableData.find((item) => this.userId === item.id)
-        console.log(this.ruleForm)
       })
+      this.tableData = response.data.list.map((item) => {
+        return {
+          ...item,
+          ImgUrl: 'http://localhost:8088/' + item.avatarImgUrl
+        }
+      })
+      this.ruleForm = this.tableData.find((item) => this.userId === item.id)
     }
   }
 }
@@ -84,9 +82,13 @@ export default {
   width: 100%;
   border-radius: 50%;
 }
+
 .box-card {
   margin: 20px;
 }
+
+
+
 .users-container {
   width: 1300px;
 }

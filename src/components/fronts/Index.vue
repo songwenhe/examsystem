@@ -9,18 +9,20 @@
         </el-carousel>
         <el-row>
           <el-col v-for="item in tableData" :key="item.id">
-            <el-card class="post">
-              <div><img src="@/assets/github.png" alt="" class="postImg" /></div>
-              <div class="postDetail">
-                <p class="postTitle">{{ item.title }}</p>
-                <div v-html="item.htmlContent" class="content"></div>
-                <div class="view">
-                  <div class="reply">
-                    <span><i class="el-icon-time"></i>{{ item.createTime }}</span>
-                    <span><i class="el-icon-view"></i>浏览({{ item.replyNum }})</span>
-                    <span><i class="el-icon-chat-round"></i>评论({{ item.replyNum }})</span>
+            <el-card shadow style="margin-bottom:10px;" :body-style="{ padding: '0px' }">
+              <div class="post">
+                <img src="@/assets/github.png" alt="" class="postImg" />
+                <div class="postDetail">
+                  <p class="postTitle">{{ item.title }}</p>
+                  <div class="content">{{ item.htmlContent }}</div>
+                  <div class="view">
+                    <div class="reply">
+                      <span><i class="el-icon-time"></i>{{ item.createTime }}</span>
+                      <span><i class="el-icon-view"></i>浏览({{ item.replyNum }})</span>
+                      <span><i class="el-icon-chat-round"></i>评论({{ item.replyNum }})</span>
+                    </div>
+                    <el-button type="success" class="button">阅读全文</el-button>
                   </div>
-                  <el-button type="success" class="button">阅读全文</el-button>
                 </div>
               </div>
             </el-card>
@@ -33,11 +35,11 @@
         <el-row class="row-bg">
           <el-col :span="24">
             <el-card class="description">
-              <div>
-                <span><i class="el-icon-s-home"></i></span><el-divider
-                  direction="vertical"></el-divider><span>关于我</span>
+              <div class="about">
+                <span><i class="el-icon-s-home"></i></span>
+                <el-divider direction="vertical"></el-divider>
+                <span>关于我</span>
               </div>
-              <el-divider></el-divider>
               <div class="anvter">
                 <img src="@/assets/微信图片_20221208000319.jpg" alt="" class="img" />
                 <p>exam开源考试系统</p>
@@ -53,7 +55,18 @@
           </el-col>
         </el-row>
         <el-row class="row-bg">
-          <el-col :span="24"><el-card>2</el-card></el-col>
+          <el-col :span="24">
+            <el-card class="recent">
+              <div class="top">
+                <span><i class="el-icon-s-ticket"></i>近期文章</span>
+                <span><i class="el-icon-thumb"></i>站长推荐</span>
+                <span><i class="el-icon-refresh"></i>随机文章</span>
+              </div>
+              <div v-for="item in tableData" :key="item.id" class="order">
+                <p><i class="el-icon-s-order"></i><span>{{ item.title }}</span></p>
+              </div>
+            </el-card>
+          </el-col>
         </el-row>
         <el-row class="row-bg">
           <el-col :span="24"><el-card>2</el-card></el-col>
@@ -74,7 +87,7 @@ export default {
       total: 0,
       tableData: [],
       query: {
-        size: 10,
+        size: 5,
         page: 1,
         keyword: ''
       },
@@ -153,8 +166,8 @@ export default {
 
 <style lang="less" scoped>
 .carouselImg {
-  width: 100%;
   height: 100%;
+  width: 100%;
 }
 
 .row-bg {
@@ -165,20 +178,23 @@ export default {
 .post {
   display: flex;
   width: 100%;
-  height: 100%;
-  margin-bottom: 10px;
+  height: 200px;
+  justify-content: space-between;
 
-  // height: 300px;
   .postImg {
-    height: 90%;
-    width: 100px;
+    width: 200px;
+    height: 100%;
+    align-items: center;
+    margin-right: 30px;
   }
-
 
   .postDetail {
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
+    justify-content: space-between;
+    margin-right: 20px;
 
     .postTitle {
       font-size: 20px;
@@ -186,18 +202,29 @@ export default {
     }
 
     .content {
-      height: 200px;
+      width: 100%;
+      word-break: break-all;
       text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      /* 这里是超出几行省略 */
       overflow: hidden;
-      white-space: nowrap;
+      margin-bottom: auto;
     }
 
     .view {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
 
       .reply span {
         margin-right: 10px;
+      }
+
+      .reply span:nth-child(3) {
+        color: #5cb87a;
       }
     }
   }
@@ -205,20 +232,31 @@ export default {
 }
 
 .description {
+  .about {
+    display: flex;
+    font-size: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #c0c4cc;
+    align-items: center;
+  }
+
   .anvter {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 20px;
+    font-weight: 700;
 
     .img {
       width: 120px;
       height: 120px;
-      border-radius: 50%;
+      border-radius: 10px;
     }
+  }
 
-    .title {
-      font-size: 12px;
-    }
+  .title {
+    font-size: 12px;
   }
 
   .social {
@@ -232,6 +270,39 @@ export default {
     }
   }
 }
+
+.recent {
+  .top {
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .top span:nth-child(1) {
+    font-weight: 700;
+  }
+
+  .order {
+    font-size: 12px;
+
+    p {
+      width: 100%;
+      word-break: break-all;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      /* 这里是超出几行省略 */
+      overflow: hidden;
+
+      i {
+        margin-right: 10px;
+      }
+    }
+  }
+
+}
+
 
 .index-container {
   max-width: 1600px;

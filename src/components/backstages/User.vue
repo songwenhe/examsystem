@@ -41,46 +41,28 @@
       </el-table-column>
       <el-table-column align="center" label="状态" prop="state">
         <template slot-scope="scope">
-          <el-switch
-            @change="(res) => stateChange(res, scope.row.id)"
-            style="display: block"
-            v-model="scope.row.state"
-            :active-value="0"
-            :inactive-value="1"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="开"
-            inactive-text="关"
-          >
+          <el-switch @change="(res) => stateChange(res, scope.row.id)" style="display: block" v-model="scope.row.state"
+            :active-value="0" :inactive-value="1" active-color="#13ce66" inactive-color="#ff4949" active-text="开"
+            inactive-text="关">
           </el-switch>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"
+            circle></el-button>
+          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.size"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.page"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
 
     <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="ruleForm" label-width="100px" align="center">
-        <el-upload
-          class="avatar-uploader"
-          action="http://127.0.0.1:8088/uploadfile"
-          name="files"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess1"
-        >
+        <el-upload class="avatar-uploader" action="http://127.0.0.1:8088/uploadfile" name="files"
+          :show-file-list="false" :on-success="handleAvatarSuccess1">
           <img v-if="ruleForm.ImgUrl" :src="ruleForm.ImgUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -127,13 +109,8 @@
 
     <el-dialog :visible.sync="dialogTableVisible" @close="clearTable">
       <el-form :model="ruleTable" label-width="100px" align="center">
-        <el-upload
-          class="avatar-uploader"
-          action="http://127.0.0.1:8088/uploadfile"
-          name="files"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess2"
-        >
+        <el-upload class="avatar-uploader" action="http://127.0.0.1:8088/uploadfile" name="files"
+          :show-file-list="false" :on-success="handleAvatarSuccess2">
           <img v-if="ruleTable.ImgUrl" :src="ruleTable.ImgUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -395,9 +372,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -406,12 +385,14 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;
   display: inline-block;
   vertical-align: middle;
 }
+
 .divider {
   .el-divider__text {
     font-size: 30px;

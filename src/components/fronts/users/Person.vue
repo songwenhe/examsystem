@@ -1,51 +1,50 @@
 <template>
   <div class="person-container">
-    <el-card class="box-card" shadow
-      ><el-divider content-position="left"><i class="el-icon-user" style="font-size: 20px">个人信息</i></el-divider>
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="姓名">
-          <el-input v-model="ruleForm.name" size="medium" style="width: 100%"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form :model="ruleForm" label-width="100px" disabled>
-        <el-form-item label="学号">
-          <el-input v-model="ruleForm.id" size="medium" style="width: 100%"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="QQ">
-          <el-input v-model="ruleForm.qq" size="medium" style="width: 100%"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="手机">
-          <el-input v-model="ruleForm.phone" size="medium" style="width: 100%"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="上传头像">
-          <el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8088/uploadfile"
-            name="files"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess1"
-          >
-            <img v-if="ruleForm.ImgUrl" :src="ruleForm.ImgUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="自我描述">
-          <el-input v-model="ruleForm.description" size="medium" style="width: 100%" type="textarea"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form :model="ruleForm" label-width="100px">
-        <el-form-item label="">
-          <el-button type="primary" @click="putContest" style="float: right; font-size: 14px">确认修改</el-button>
-        </el-form-item>
-      </el-form>
+    <el-card shadow>
+      <div class="box">
+        <el-divider content-position="left">
+          <i class="el-icon-user" style="font-size: 20px">个人信息</i>
+        </el-divider>
+        <el-form :model="ruleForm" label-width="100px">
+          <el-form-item label="姓名">
+            <el-input v-model="ruleForm.name" size="medium" style="width: 100%"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form :model="ruleForm" label-width="100px" disabled>
+          <el-form-item label="学号">
+            <el-input v-model="ruleForm.id" size="medium" style="width: 100%"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form :model="ruleForm" label-width="100px">
+          <el-form-item label="QQ">
+            <el-input v-model="ruleForm.qq" size="medium" style="width: 100%"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form :model="ruleForm" label-width="100px">
+          <el-form-item label="手机">
+            <el-input v-model="ruleForm.phone" size="medium" style="width: 100%"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form :model="ruleForm" label-width="100px">
+          <el-form-item label="上传头像">
+            <el-upload class="avatar-uploader" action="http://127.0.0.1:8088/uploadfile" name="files"
+              :show-file-list="false" :on-success="handleAvatarSuccess1">
+              <img v-if="ruleForm.ImgUrl" :src="ruleForm.ImgUrl" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <el-form :model="ruleForm" label-width="100px">
+          <el-form-item label="自我描述">
+            <el-input v-model="ruleForm.description" size="medium" style="width: 100%" type="textarea"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form :model="ruleForm" label-width="100px">
+          <el-form-item label="">
+            <el-button type="primary" @click="putContest" style="float: right; font-size: 14px">确认修改</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </el-card>
   </div>
 </template>
@@ -127,4 +126,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped lang="less">
+
+</style>

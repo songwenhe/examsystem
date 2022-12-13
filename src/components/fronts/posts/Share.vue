@@ -2,7 +2,7 @@
   <div class="share-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/_frontpage/index' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>分享中心</el-breadcrumb-item>
         <el-breadcrumb-item>{{ post.title }}</el-breadcrumb-item>
       </el-breadcrumb>
@@ -11,17 +11,20 @@
     <div class="postdesc">
       <el-row>
         <el-col :span="12">
-          <div class="content">
-            <a href=""
-              ><h4>{{ userName }}</h4>
-            </a>
-            <span class="createDate">{{ post.createTime }}发表</span>
+          <div>
+            <el-avatar shape="square" :size="36" :src="author.avatarImgUrl"></el-avatar>
+            <div class="content">
+              <h4>{{ author.name }}</h4>
+              <div>
+                <span class="createDate">{{ post.createTime }}发表</span>
+                <p class="icons">
+                  <i class="el-icon-chat-dot-round">{{ post.replyNum }}</i>
+                  <i class="el-icon-thumb">6</i>
+                  <i class="el-icon-view">123</i>
+                </p>
+              </div>
+            </div>
           </div>
-          <p class="icons">
-            <i class="el-icon-chat-dot-round">{{ post.replyNum }}</i>
-            <i class="el-icon-thumb">6</i>
-            <i class="el-icon-view">123</i>
-          </p>
         </el-col>
       </el-row>
     </div>
@@ -40,39 +43,32 @@
       <div>
         <el-row v-for="(item, index) in comments" :key="item.id">
           <el-col :span="1">
-            <el-avatar shape="square" :size="36" :src="'http://localhost:8088/' + item.user.avatarImgUrl"></el-avatar>
+            <el-avatar shape="square" :size="36" :src="item.user.avatarImgUrl"></el-avatar>
           </el-col>
           <el-col :span="23">
-            <a href="javascript:;" class="author">{{ item.user.name ? item.user.name : '已注销' }}</a>
+            <a href="javascript:;" class="author">{{ item.user.name }}</a>
             <span class="replyDate"></span>
             <div class="text">{{ item.content }}</div>
             <a href="javascript:;" class="actions" @click="showTextarea(item.id)">回复</a>
             <transition name="fade">
               <div class="replyArea" v-show="currentIndex === item.id">
-                <el-input
-                  type="textarea"
-                  placeholder="请输入内容"
-                  v-model="comments[index].replyValue"
-                  :rows="2"
-                  resize="none"
-                  @blur="closeReply"
-                >
+                <el-input type="textarea" placeholder="请输入内容" v-model="comments[index].replyValue" :rows="2"
+                  resize="none" @blur="closeReply">
                 </el-input>
                 <div class="btns">
                   <el-button type="info" icon="el-icon-close" size="mini" @click="closeReply"> 取消 </el-button>
-                  <el-button type="success" icon="el-icon-edit" size="mini" @click="addReply(item.id, comments[index].replyValue)"
-                    >回复</el-button
-                  >
+                  <el-button type="success" icon="el-icon-edit" size="mini"
+                    @click="addReply(item.id, comments[index].replyValue)">回复</el-button>
                 </div>
               </div>
             </transition>
             <div class="comments">
               <el-row v-for="reply in item.replies" :key="reply.id">
                 <el-col :span="1">
-                  <el-avatar shape="square" :size="36" :src="'http://localhost:8088/' + item.user.avatarImgUrl"></el-avatar>
+                  <el-avatar shape="square" :size="36" :src="reply.user.avatarImgUrl"></el-avatar>
                 </el-col>
                 <el-col class="info" :span="15">
-                  <a href="javascript:;" class="author">{{ reply.user.name ? reply.user.name : '已注销' }}</a>
+                  <a href="javascript:;" class="author">{{ reply.user.name }}</a>
                   <span class="replyDate">{{ reply.createTime }}</span>
                   <div class="text">{{ reply.content }}</div>
                 </el-col>
@@ -83,15 +79,8 @@
       </div>
     </div>
     <div class="commentArea">
-      <el-input
-        type="textarea"
-        :rows="4"
-        placeholder="请输入内容"
-        resize="none"
-        v-model="commentValue"
-        @focus="isShowBtns = true"
-        @blur="isShowBtns = false"
-      >
+      <el-input type="textarea" :rows="4" placeholder="请输入内容" resize="none" v-model="commentValue"
+        @focus="isShowBtns = true" @blur="isShowBtns = false">
       </el-input>
       <transition name="fade">
         <div class="btns" v-show="isShowBtns">
@@ -116,16 +105,18 @@ export default {
       comments: [],
       userId: 0,
       currentIndex: 0,
-      isShowBtns: false
+      isShowBtns: false,
+      author: ''
     }
   },
   computed: mapState({
     postDetail: (state) => state.postDetail
   }),
-  created() {
+  async created() {
     this.userName = localStorage.getItem('userName')
     this.userId = localStorage.getItem('userId')
     this.post = this.postDetail
+    this.author = await this.getUserById(this.postDetail.authorId)
     this.getComments()
   },
   methods: {
@@ -179,17 +170,27 @@ export default {
       })
       return res.data
     },
-    async getUserById(userId) {
+    async getUserById(id) {
       const res = await axios({
         method: 'get',
         url: 'http://127.0.0.1:8088/account/getById',
-        params: { id: userId }
+        params: { id: id }
       })
       if (res.status === 200) {
         if (res.data !== '') {
-          return res.data
+          if (res.data.avatarImgUrl) {
+            res.data.avatarImgUrl = 'http://localhost:8088/' + res.data.avatarImgUrl
+            return res.data
+          }
+          else {
+            res.data.avatarImgUrl = 'http://localhost:8088/avater.png'
+            return res.data
+          }
         } else {
-          return '已注销'
+          return {
+            name: '已注销',
+            avatarImgUrl: 'http://localhost:8088/avater.png'
+          }
         }
       }
     },
@@ -247,6 +248,7 @@ export default {
 .author {
   text-decoration: none;
 }
+
 .share-container {
   padding: 20px;
   width: 1300px;
@@ -257,6 +259,7 @@ export default {
     margin-right: 6px;
   }
 }
+
 .postDetail {
   .el-main {
     padding: 0 20px;
@@ -266,15 +269,18 @@ export default {
 .postdesc {
   font-size: 14px;
   position: relative;
+
   .content {
     a h4 {
       margin: 0 0 12px 0;
     }
   }
+
   .icons {
     position: absolute;
     bottom: 0;
     right: 0;
+
     i {
       font-size: 16px;
       padding: 0 4px;
@@ -289,6 +295,7 @@ export default {
 
 .replyTitle {
   font-size: 20px;
+
   i {
     padding-right: 4px;
   }
@@ -297,19 +304,24 @@ export default {
 .comment {
   .content {
     font-size: 14px;
+
     .replyDate {
       color: #aaa;
     }
+
     .actions {
       color: #e74c3c;
     }
+
     .el-row {
       margin-bottom: 20px;
     }
   }
+
   .comments {
     margin-top: 6px;
   }
+
   .text {
     width: 350px;
   }
@@ -320,6 +332,7 @@ export default {
   position: relative;
   width: 600px;
   margin-bottom: 30px;
+
   .btns {
     position: absolute;
     right: 0;
@@ -328,14 +341,21 @@ export default {
     z-index: 99;
   }
 }
+
 // 动画
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.6s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
+
 .postContent {
   margin: 40px 0;
   letter-spacing: 0.1em;

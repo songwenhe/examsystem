@@ -1,5 +1,5 @@
 <template>
-  <div class="contest-container">
+  <div class="shares-container">
     <div style="height: 50px; text-align: center">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/_frontpage/index' }">首页</el-breadcrumb-item>
@@ -14,33 +14,29 @@
             <span><i class="el-icon-edit"></i>我要发布</span>
           </el-button>
         </div>
-        <div v-for="i in tableData" :key="i.id" class="text item">
-          <div>
-            <a href="javascript:;" @click="toPost(i)" class="title">
-              <h3>{{ i.title }}</h3>
-            </a>
-            <p>
-              <span class="time">{{ i.userName }}</span>
-              <span class="time">{{ i.createTime }}<em>发表在[我要提问]</em></span>
-              <span class="time"><em>最后回复时间:</em>{{ i.lastReplyTime }}</span>
-            </p>
-          </div>
-          <div class="icons">
-            <p><i class="el-icon-chat-dot-round"></i>{{ i.replyNum }}</p>
-            <p><i class="el-icon-thumb"></i>{{ i.replyNum }}</p>
-            <p><i class="el-icon-view"></i>{{ i.replyNum }}</p>
-          </div>
-        </div>
+        <el-row>
+          <el-col v-for="item in tableData" :key="item.id">
+            <el-card shadow style="margin-bottom:10px;" :body-style="{ padding: '0px' }">
+              <div class="post">
+                <img src="@/assets/github.png" alt="" class="postImg" />
+                <div class="postDetail">
+                  <p class="postTitle">{{ item.title }}</p>
+                  <div class="view">
+                    <div class="reply">
+                      <span><i class="el-icon-time"></i>{{ item.createTime }}</span>
+                      <span><i class="el-icon-view"></i>浏览({{ item.replyNum }})</span>
+                      <span><i class="el-icon-chat-round"></i>评论({{ item.replyNum }})</span>
+                    </div>
+                    <el-button type="success" class="button" @click="toPost(item)">阅读全文</el-button>
+                  </div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-card>
-      <el-pagination
-        @current-change="pageChange"
-        :page-size="query.size"
-        :pager-count="11"
-        layout="prev, pager, next"
-        :total="total"
-        style="margin-left: 0px"
-        :current-page="query.page"
-      ></el-pagination>
+      <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+        :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
     </div>
   </div>
 </template>
@@ -171,45 +167,69 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.title {
-  text-decoration: none;
-}
-.time {
-  margin-right: 10px;
-}
-.title:hover {
-  color: red;
-}
-.contest-container {
+.shares-container {
+  max-width: 1300px;
   padding: 20px;
-  min-width: 1300px;
-}
-.icons {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  bottom: 20px;
-  right: 0;
-}
-.icons i {
-  padding: 0 4px;
-}
-.text {
-  font-size: 14px;
 }
 
-.item {
+.post {
   display: flex;
+  width: 100%;
+  height: 150px;
   justify-content: space-between;
-  flex-direction: row;
-  margin-bottom: 18px;
+  align-items: center;
+
+  .postImg {
+    width: 150px;
+    height: 100%;
+    margin-right: 30px;
+    border-radius: 50%;
+  }
+
+  .postDetail {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+    margin-right: 20px;
+
+    .postTitle {
+      align-items: center;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .view {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+
+      .reply span {
+        margin-right: 10px;
+      }
+
+      .reply span:nth-child(3) {
+        color: #5cb87a;
+      }
+    }
+  }
+
 }
+
+
+
+
+
+
 
 .clearfix:before,
 .clearfix:after {
   display: table;
   content: '';
 }
+
 .clearfix:after {
   clear: both;
 }

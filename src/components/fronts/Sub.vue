@@ -26,15 +26,8 @@
           </el-card>
         </el-col>
       </el-row>
-      <el-pagination
-        @current-change="pageChange"
-        :page-size="query.size"
-        :pager-count="11"
-        layout="prev, pager, next"
-        :total="total"
-        style="margin-left: 0px"
-        :current-page="query.page"
-      ></el-pagination>
+      <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+        :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
     </div>
   </div>
 </template>
@@ -103,9 +96,9 @@ export default {
 
 <style lang="less" scoped>
 .subjects-container {
-  min-width: 1300px;
   padding: 20px;
 }
+
 .cart-detail {
   position: absolute;
   display: flex;
@@ -121,6 +114,7 @@ export default {
   box-sizing: border-box;
   margin-left: 10px;
 }
+
 .cart-author {
   margin-left: 10px;
 }
@@ -131,6 +125,7 @@ export default {
   padding-left: 0;
   padding-right: 0;
 }
+
 .card-content {
   position: relative;
   width: 260px;
@@ -139,6 +134,7 @@ export default {
   margin-left: 33px;
   border-radius: 8px;
 }
+
 .card-title {
   font-size: 20px;
   font-weight: 600;
@@ -160,6 +156,7 @@ export default {
   padding: 12px 20px;
   border-radius: 4px;
 }
+
 .image {
   width: 100%;
   height: 140px;

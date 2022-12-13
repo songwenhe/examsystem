@@ -26,15 +26,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        @current-change="pageChange"
-        :page-size="query.size"
-        :pager-count="11"
-        layout="prev, pager, next"
-        :total="total"
-        style="margin-left: 0px"
-        :current-page="query.page"
-      ></el-pagination>
+      <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+        :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
     </div>
   </div>
 </template>

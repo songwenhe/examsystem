@@ -20,20 +20,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.size"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.page"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
+
 export default {
   data() {
     return {
@@ -63,9 +56,9 @@ export default {
       this.getQuestions()
     },
     getQuestions() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/question/api/pageQuestion',
+        url: 'question/api/pageQuestion',
         params: this.query
       }).then((response) => {
         /* this.tableData = response.data.list
@@ -90,9 +83,9 @@ export default {
       })
     },
     getSubjects() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
+        url: 'subject/api/pageSubjects?size=999'
       }).then((response) => {
         this.pageSubjects = response.data.list
         this.subName = this.pageSubjects.find((item) => this.query.subjectId === item.id)

@@ -29,33 +29,23 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"
+            circle></el-button>
+          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.size"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.page"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
 
     <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="ruleForm" label-width="100px">
         <el-form-item label="课程名称">
           <el-input v-model="ruleForm.name"></el-input>
-          <el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8088/uploadfile"
-            name="files"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess1"
-          >
+          <el-upload class="avatar-uploader" action="http://127.0.0.1:8088/uploadfile" name="files"
+            :show-file-list="false" :on-success="handleAvatarSuccess1">
             <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -71,13 +61,8 @@
       <el-form :model="ruleTable" label-width="100px">
         <el-form-item label="课程名称">
           <el-input v-model="ruleTable.name"></el-input>
-          <el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8088/uploadfile"
-            name="files"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess2"
-          >
+          <el-upload class="avatar-uploader" action="http://127.0.0.1:8088/uploadfile" name="files"
+            :show-file-list="false" :on-success="handleAvatarSuccess2">
             <img v-if="ruleTable.imageUrl" :src="ruleTable.imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -92,7 +77,7 @@
 </template>
 
 <script>
-const axios = require('axios')
+
 
 export default {
   created() {
@@ -158,9 +143,9 @@ export default {
         center: true
       })
         .then(() => {
-          axios({
+          this.$http({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/subject/api/deleteSubject/' + row.id
+            url: 'subject/api/deleteSubject/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -188,9 +173,9 @@ export default {
       this.getSubjects()
     },
     updateSubject() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/updateSubject',
+        url: 'subject/api/updateSubject',
         data: this.ruleForm
       }).then((response) => {
         this.getSubjects()
@@ -198,9 +183,9 @@ export default {
       })
     },
     addSubject() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/subject/api/addSubject',
+        url: 'subject/api/addSubject',
         data: this.ruleTable
       }).then((response) => {
         this.getSubjects()
@@ -219,10 +204,10 @@ export default {
       this.dialogFormVisible = true
       this.ruleForm.id = row.id
       this.ruleForm.name = row.name
-      this.ruleForm.imageUrl = 'http://127.0.0.1:8088/' + row.imgUrl
-      // axios({
+      this.ruleForm.imageUrl = '' + row.imgUrl
+      // this.$http({
       //   method: 'put',
-      //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
+      //   url: 'contest/api/updateContest',
       //   params: {}
       // })
     },
@@ -251,9 +236,9 @@ export default {
       else return '综合实训'
     },
     getSubjects() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects',
+        url: 'subject/api/pageSubjects',
         params: this.query
       }).then((response) => {
         /* this.tableData = response.data.list
@@ -279,9 +264,9 @@ export default {
       })
     }
     // allSubjects() {
-    //   axios({
+    //   this.$http({
     //     method: 'get',
-    //     url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
+    //     url: 'subject/api/pageSubjects?size=999'
     //   }).then((response) => {
     //     this.pageSubjects = response.data.list
     //     this.getSubjects()
@@ -299,9 +284,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -310,11 +297,13 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;
   display: block;
 }
+
 .divider {
   .el-divider__text {
     font-size: 30px;

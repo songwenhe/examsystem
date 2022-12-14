@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
@@ -145,9 +144,9 @@ export default {
       return res
     },
     async getComments() {
-      const response = await axios({
+      const response = await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/reply/api/getCommentsByPostId',
+        url: 'reply/api/getCommentsByPostId',
         params: { postId: this.postDetail.id }
       })
       response.data.forEach(async (item) => {
@@ -158,9 +157,9 @@ export default {
       this.comments = response.data
     },
     async getReplys(id) {
-      const res = await axios({
+      const res = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/reply/getReplysByCommentId',
+        url: 'reply/getReplysByCommentId',
         params: { commentId: id }
       })
       res.data.forEach(async (item) => {
@@ -171,9 +170,9 @@ export default {
       return res.data
     },
     async getUserById(id) {
-      const res = await axios({
+      const res = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/account/getById',
+        url: 'account/getById',
         params: { id: id }
       })
       if (res.status === 200) {
@@ -197,9 +196,9 @@ export default {
     async addComment() {
       this.commentValue = this.commentValue.trim()
       if (this.commentValue.length) {
-        const { data, status } = await axios({
+        const { data, status } = await this.$http({
           method: 'post',
-          url: 'http://127.0.0.1:8088/reply/api/addComment',
+          url: 'reply/api/addComment',
           data: {
             postId: this.postDetail.id,
             userId: this.userId,
@@ -219,9 +218,9 @@ export default {
     async addReply(commentId, val) {
       val = val.trim()
       if (val.length) {
-        const { data, status } = await axios({
+        const { data, status } = await this.$http({
           method: 'post',
-          url: 'http://127.0.0.1:8088/reply/api/addReply',
+          url: 'reply/api/addReply',
           data: {
             postId: this.postDetail.id,
             userId: this.userId,

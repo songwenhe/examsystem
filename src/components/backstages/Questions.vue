@@ -25,21 +25,16 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"
+            circle></el-button>
+          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.size"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.page"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
 
     <el-dialog :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="ruleForm" label-width="100px">
@@ -142,7 +137,7 @@
 </template>
 
 <script>
-const axios = require('axios')
+
 
 export default {
   created() {
@@ -243,9 +238,9 @@ export default {
         center: true
       })
         .then(() => {
-          axios({
+          this.$http({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/question/api/deleteQuestion/' + row.id
+            url: 'question/api/deleteQuestion/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -273,9 +268,9 @@ export default {
       this.getQuestions()
     },
     putContest() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/question/api/updateQuestion',
+        url: 'question/api/updateQuestion',
         data: this.ruleForm
       }).then((response) => {
         this.getQuestions()
@@ -283,9 +278,9 @@ export default {
       })
     },
     addSubject() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/question/api/addQuestion',
+        url: 'question/api/addQuestion',
         data: this.ruleTable
       }).then((response) => {
         this.getQuestions()
@@ -329,9 +324,9 @@ export default {
       else return '综合实训'
     },
     getQuestions() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/question/api/pageQuestion',
+        url: 'question/api/pageQuestion',
         params: this.query
       }).then((response) => {
         /* this.tableData = response.data.list
@@ -358,9 +353,9 @@ export default {
       })
     },
     getSubjects() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
+        url: 'subject/api/pageSubjects?size=999'
       }).then((response) => {
         this.pageSubjects = response.data.list
         this.getQuestions()

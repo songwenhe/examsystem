@@ -163,8 +163,6 @@
 </template>
 
 <script>
-const axios = require('axios')
-
 export default {
   data() {
     return {
@@ -233,9 +231,9 @@ export default {
         center: true
       })
         .then(() => {
-          axios({
+          this.$http({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/account/delete/' + row.id
+            url: 'account/delete/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -263,9 +261,9 @@ export default {
       this.getUsers()
     },
     putContest() {
-      axios({
+      this.$http({
         method: 'put',
-        url: 'http://127.0.0.1:8088/account/updateIgnoreNull',
+        url: 'account/updateIgnoreNull',
         data: this.ruleForm
       }).then((response) => {
         console.log(response)
@@ -283,9 +281,9 @@ export default {
       })
     },
     addUser() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/insert',
+        url: 'account/insert',
         data: Object.assign(this.ruleTable, {
           id: Math.floor(Math.random() * 100)
         })
@@ -321,9 +319,9 @@ export default {
       // this.ruleForm.state = row.state;
       // this.ruleForm.totalScore = row.totalScore;
       // this.ruleForm.subjectId = row.subjectId;
-      // axios({
+      // this.$http({
       //   method: 'put',
-      //   url: 'http://127.0.0.1:8088/contest/api/updateContest',
+      //   url: 'contest/api/updateContest',
       //   params: {}
       // })
     },
@@ -345,9 +343,9 @@ export default {
       return res
     },
     getUsers() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/pageAccount',
+        url: 'account/pageAccount',
         data: this.query
       }).then((response) => {
         this.total = response.data.total

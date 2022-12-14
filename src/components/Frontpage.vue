@@ -3,17 +3,9 @@
     <el-container>
       <el-header class="f-header">
         <div class="title">在线考试系统</div>
-        <el-menu
-          text-color="#f1f2f6"
-          background-color="#00162a"
-          mode="horizontal"
-          :router="true"
-          active-text-color="#409eff"
-          :collapse-transition="false"
-          :default-active="index"
-          @select="slt"
-          class="el-menu-demo nav"
-        >
+        <el-menu text-color="#f1f2f6" background-color="#00162a" mode="horizontal" :router="true"
+          active-text-color="#409eff" :collapse-transition="false" :default-active="index" @select="slt"
+          class="el-menu-demo nav">
           <el-menu-item index="/_frontpage/index">首页</el-menu-item>
           <el-menu-item index="/_frontpage/contest">在线评测</el-menu-item>
           <el-menu-item index="/_frontpage/subject">科目学习</el-menu-item>
@@ -34,7 +26,7 @@
         <router-view></router-view>
       </el-main>
       <el-footer class="footer" height="auto">
-        <p><a href="">关于我们</a>|<a href="">联系我们</a></p>
+        <p><a href="javascript:;">关于我们</a>|<a href="javascript:;">联系我们</a></p>
         <p>© 2020 NSU All Rights Reserved</p>
       </el-footer>
     </el-container>
@@ -42,7 +34,7 @@
 </template>
 
 <script>
-const axios = require('axios')
+
 export default {
   data() {
     return {
@@ -70,9 +62,9 @@ export default {
       }
     },
     async getUser() {
-      const response = await axios({
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/account/getById',
+        url: 'account/getById',
         params: { id: this.userId }
       })
       this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
@@ -86,18 +78,21 @@ export default {
 a {
   text-decoration: none;
 }
+
 .title {
   font-size: 20px;
   width: 300px;
   line-height: 60px;
   text-align: center;
 }
+
 .f-header {
   background-color: #00162a;
   justify-content: space-between;
   display: flex;
   color: #f1f2f6;
 }
+
 // .is-active {
 //   background-color: #409eff;
 // }
@@ -108,6 +103,7 @@ a {
   flex-flow: column;
   min-height: 100%;
   background-color: #fcfdff;
+
   .frontpage {
     display: flex;
     justify-content: center;
@@ -118,26 +114,32 @@ a {
   padding: 0;
   margin: auto;
 }
+
 .nav {
   margin-left: auto;
   margin-right: 30px;
 }
+
 .footer {
   text-align: center;
 }
+
 .main-container {
   min-width: 1300px;
   background-color: #fff;
 }
+
 .usermenu {
   display: flex;
   align-items: center;
   height: 100%;
+
   .img {
     height: 90%;
     margin-right: 10px;
     border-radius: 50%;
   }
+
   .drop {
     color: #f1f2f6;
   }

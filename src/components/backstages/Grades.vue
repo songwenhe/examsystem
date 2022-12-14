@@ -11,7 +11,8 @@
       </el-breadcrumb>
     </div>
     <div style="height: 60px">
-      <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" style="width: 300px" @input="getContents()" />
+      <el-input v-model="query.keyword" size="medium" placeholder="输入关键字搜索" style="width: 300px"
+        @input="getContents()" />
       <el-button class="el-icon-search" size="medium" @click="getContents()"></el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" max-height="600px">
@@ -34,26 +35,21 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="success" icon="el-icon-search" @click="goGrade(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="submitGrade(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="success" icon="el-icon-search" @click="goGrade(scope.$index, scope.row)"
+            circle></el-button>
+          <el-button size="medium" type="primary" icon="el-icon-edit" @click="submitGrade(scope.$index, scope.row)"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.size"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.page"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
+
 import { mapState, mapMutations } from 'vuex'
 export default {
   created() {
@@ -119,35 +115,33 @@ export default {
       this.query.page = res
       this.getContents()
     },
-    putContest() {
+    async putContest() {
       const startTime = new Date(this.ruleForm.data1[0]).getTime()
       const endTime = new Date(this.ruleForm.data1[1]).getTime()
-      axios({
+      await this.$http({
         method: 'put',
-        url: 'http://127.0.0.1:8088/contest/api/updateContest',
+        url: 'contest/api/updateContest',
         data: Object.assign(this.ruleForm, {
           startTime,
           endTime
         })
-      }).then((response) => {
-        this.getContents()
-        this.clearForm()
       })
+      this.getContents()
+      this.clearForm()
     },
-    addSubject() {
+    async addSubject() {
       const startTime = new Date(this.ruleTable.data1[0]).getTime()
       const endTime = new Date(this.ruleTable.data1[1]).getTime()
-      axios({
+      await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/contest/api/addContest',
+        url: 'contest/api/addContest',
         data: Object.assign(this.ruleTable, {
           startTime,
           endTime
         })
-      }).then((response) => {
-        this.getContents()
-        this.clearTable()
       })
+      this.getContents()
+      this.clearTable()
     },
     clearForm() {
       this.ruleForm.data1 = []
@@ -186,38 +180,36 @@ export default {
       if (subject !== undefined) return subject.name
       else return '综合实训'
     },
-    getContents() {
-      axios({
+    async getContents() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/contest/api/pageContest',
+        url: 'contest/api/pageContest',
         params: this.query
-      }).then((response) => {
-        this.total = response.data.total
-        this.tableData = response.data.list.map((item) => {
-          const nowTime = new Date().getTime()
-          if (nowTime < item.startTime) {
-            item.state = 1
-          } else if (nowTime > item.startTime && nowTime < item.endTime) {
-            item.state = 2
-          } else if (nowTime > item.endTime) {
-            item.state = 3
-          }
-          return Object.assign(item, {
-            startTime: this.handleTime(item.startTime),
-            endTime: this.handleTime(item.endTime),
-            subjectName: this.subjectName(item.subjectId)
-          })
+      })
+      this.total = response.data.total
+      this.tableData = response.data.list.map((item) => {
+        const nowTime = new Date().getTime()
+        if (nowTime < item.startTime) {
+          item.state = 1
+        } else if (nowTime > item.startTime && nowTime < item.endTime) {
+          item.state = 2
+        } else if (nowTime > item.endTime) {
+          item.state = 3
+        }
+        return Object.assign(item, {
+          startTime: this.handleTime(item.startTime),
+          endTime: this.handleTime(item.endTime),
+          subjectName: this.subjectName(item.subjectId)
         })
       })
     },
-    getSubjects() {
-      axios({
+    async getSubjects() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
-      }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getContents()
+        url: 'subject/api/pageSubjects?size=999'
       })
+      this.pageSubjects = response.data.list
+      this.getContents()
     }
   }
 }

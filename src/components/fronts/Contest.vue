@@ -33,7 +33,7 @@
 </template>
 
 <script>
-const axios = require('axios')
+
 import { mapState, mapMutations } from 'vuex'
 export default {
   created() {
@@ -89,38 +89,37 @@ export default {
       if (subject !== undefined) return subject.name
       else return '综合实训'
     },
-    getContents() {
-      axios({
+    async getContents() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/contest/api/pageContest',
+        url: 'contest/api/pageContest',
         params: this.query
-      }).then((response) => {
-        this.total = response.data.total
-        this.tableData = response.data.list.map((item) => {
-          const nowTime = new Date().getTime()
-          if (nowTime < item.startTime) {
-            item.state = 1
-          } else if (nowTime > item.startTime && nowTime < item.endTime) {
-            item.state = 2
-          } else if (nowTime > item.endTime) {
-            item.state = 3
-          }
-          return Object.assign(item, {
-            startTime: this.handleTime(item.startTime),
-            endTime: this.handleTime(item.endTime),
-            subjectName: this.subjectName(item.subjectId)
-          })
+      })
+      this.total = response.data.total
+      this.tableData = response.data.list.map((item) => {
+        const nowTime = new Date().getTime()
+        if (nowTime < item.startTime) {
+          item.state = 1
+        } else if (nowTime > item.startTime && nowTime < item.endTime) {
+          item.state = 2
+        } else if (nowTime > item.endTime) {
+          item.state = 3
+        }
+        return Object.assign(item, {
+          startTime: this.handleTime(item.startTime),
+          endTime: this.handleTime(item.endTime),
+          subjectName: this.subjectName(item.subjectId)
         })
       })
+
     },
-    getSubjects() {
-      axios({
+    async getSubjects() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
-      }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getContents()
+        url: 'subject/api/pageSubjects?size=999'
       })
+      this.pageSubjects = response.data.list
+      this.getContents()
     }
   }
 }

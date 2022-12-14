@@ -73,7 +73,6 @@
    this.setPostDetail(detail)
  */
 import { mapState, mapMutations } from 'vuex'
-const axios = require('axios')
 export default {
   data() {
     return {
@@ -127,9 +126,9 @@ export default {
       return res
     },
     getShare() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/post/api/pagePosts',
+        url: 'post/api/pagePosts',
         params: this.query
       }).then((response) => {
         this.total = response.data.total
@@ -148,9 +147,9 @@ export default {
       this.$router.push('/_frontpage/share/' + post.id)
     },
     getUsers() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/pageAccount',
+        url: 'account/pageAccount',
         data: this.query1
       }).then((response) => {
         this.pageUsers = response.data.list

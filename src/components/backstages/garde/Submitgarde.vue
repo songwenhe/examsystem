@@ -24,32 +24,22 @@
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.size"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.page"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
 
     <el-dialog :visible.sync="isDialogCorrect" width="40%" @close="clearDialog">
       <el-form :model="answerCard" :rules="correctRules" ref="correctForm">
-        <el-form-item
-          v-for="(item, index) in answerCard.miniProblem"
-          :key="item.id"
-          class="correctArea"
-          :prop="'miniProblem.' + index + '.value'"
-          :rules="[{ required: true, message: '分数不能为空', trigger: 'blur' }]"
-        >
+        <el-form-item v-for="(item, index) in answerCard.miniProblem" :key="item.id" class="correctArea"
+          :prop="'miniProblem.' + index + '.value'" :rules="[{ required: true, message: '分数不能为空', trigger: 'blur' }]">
           <div>
             <label for="">题号</label>
             <el-input v-model="item.id" disabled></el-input>
             <label for="">考生答案</label>
-            <el-input type="textarea" v-model="item.sAnswer" resize="none" :autosize="{ minRows: 2, maxRows: 6 }" disabled></el-input>
+            <el-input type="textarea" v-model="item.sAnswer" resize="none" :autosize="{ minRows: 2, maxRows: 6 }"
+              disabled></el-input>
             <label for="">参考答案</label>
-            <el-input type="textarea" v-model="item.answer" resize="none" :autosize="{ minRows: 2, maxRows: 6 }" disabled></el-input>
+            <el-input type="textarea" v-model="item.answer" resize="none" :autosize="{ minRows: 2, maxRows: 6 }"
+              disabled></el-input>
             <label for="">分值</label>
             <el-input v-model="item.score" disabled></el-input>
             <label for="">打分</label>
@@ -67,7 +57,6 @@
 </template>
 
 <script>
-const axios = require('axios')
 import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
@@ -132,86 +121,59 @@ export default {
       this.query.page = res
       this.pageGrade()
     },
-    submitCorrect() {
-      axios({
+    async submitCorrect() {
+      const response = await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/grade/api/finishGrade',
+        url: 'grade/api/finishGrade',
         data: {
           manulResult: this.totalScore,
           contestId: this.$route.params.id,
           autoResult: this.currentCard.autoResult,
           id: this.currentCard.id
         }
-      }).then((response) => {
-        console.log(response)
-        if (response.status === 200) {
-          if (response.data.success) {
-            this.$message.success('批改成功')
-            this.isDialogCorrect = false
-            this.currentCard = {}
-            this.getUsersByContestId()
-          }
-        } else {
-          this.$message.error('批改失败')
+      })
+      console.log(response)
+      if (response.status === 200) {
+        if (response.data.success) {
+          this.$message.success('批改成功')
+          this.isDialogCorrect = false
+          this.currentCard = {}
+          this.getUsersByContestId()
+        }
+      } else {
+        this.$message.error('批改失败')
+      }
+    },
+    async pageGrade() {
+      const response = await this.$http({
+        method: 'get',
+        url: 'grade/api/pageGradeByContestId',
+        params: this.query
+      })
+      this.tableData = response.data.list.map((item) => {
+        return {
+          ...item,
+          name: this.userName(item.studentId)
         }
       })
-
-      // this.$refs.correctForm.validate(async (valid) => {
-      //   if (!valid) return
-      //   const { status, data } = await this.$http.post('/grade/api/finishGrade', {
-      //     manulResult: this.totalScore,
-      //     contestId: this.id,
-      //     autoResult: this.currentCard.autoResult,
-      //     id: this.currentCard.id
-      //   })
-      //   if (status === 200) {
-      //     if (data.success) {
-      //       this.$message.success('批改成功')
-      //       this.isDialogCorrect = false
-      //       this.currentCard = {}
-      //       this.getUsersByContestId()
-      //     } else {
-      //       this.$message.error('批改失败')
-      //     }
-      //   } else {
-      //     this.$message.warning('请求失败')
-      //   }
-      // })
     },
-    pageGrade() {
-      axios({
+    async getProblemById() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/grade/api/pageGradeByContestId',
-        params: this.query
-      }).then((response) => {
-        this.tableData = response.data.list.map((item) => {
-          return {
-            ...item,
-            name: this.userName(item.studentId)
-          }
-        })
-      })
-    },
-    getProblemById() {
-      axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8088/question/api/getQuestionsByContestId',
+        url: 'question/api/getQuestionsByContestId',
         params: { contestId: this.$route.params.id }
-      }).then((response) => {
-        console.log(response)
-        this.problem = response.data
-        this.answerCard.miniProblem = this.cMiniProblem
       })
+      this.problem = response.data
+      this.answerCard.miniProblem = this.cMiniProblem
     },
-    getUsers() {
-      axios({
+    async getUsers() {
+      const response = await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/pageAccount',
+        url: 'account/pageAccount',
         data: this.query1
-      }).then((response) => {
-        this.pageUsers = response.data.list
-        this.pageGrade()
       })
+      this.pageUsers = response.data.list
+      this.pageGrade()
     },
     userName(id) {
       let user = this.pageUsers.find((item) => id === item.id)

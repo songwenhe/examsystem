@@ -63,7 +63,7 @@
 </template>
 
 <script>
-const axios = require('axios')
+
 export default {
   data() {
     return {
@@ -80,9 +80,9 @@ export default {
 
   methods: {
     getQuestions() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/question/api/pageQuestion?size=999'
+        url: 'question/api/pageQuestion?size=999'
       }).then((response) => {
         this.pageQuestions = response.data.list.map((item) => {
           return Object.assign(item, {
@@ -129,32 +129,39 @@ export default {
   padding: 20px;
   width: 1300px;
 }
+
 .answerArea {
   padding: 20px 0;
   padding-left: 20px;
 }
+
 .title {
   font-size: 20px;
 }
+
 .box-card {
   span {
     display: inline-block;
     // line-height: 40px;
     font-size: 13px;
   }
+
   dd {
     border-bottom: 1px solid #ccc;
     padding: 10px 0;
   }
+
   dd:last-child {
     border-bottom: none;
   }
-  dd > span:first-child {
+
+  dd>span:first-child {
     min-width: 60px;
     font-weight: 600;
     letter-spacing: 0.1em;
   }
-  dd > span:last-child {
+
+  dd>span:last-child {
     padding-left: 20px;
   }
 }

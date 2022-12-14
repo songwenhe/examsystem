@@ -20,7 +20,6 @@ const routes = [
       { path: '_problems/:id/:contestName', component: () => import('@/components/backstages/problems/Problems') },
       { path: '_grade/:id/:contestName', component: () => import('@/components/backstages/garde/Garde') },
       { path: '_submitgrade/:id/:contestName', component: () => import('@/components/backstages/garde/Submitgarde') }
-      // { path: '_tests/:id/:contestName', component: () => import('@/components/backstages/test/Tests') }
     ]
   },
   {

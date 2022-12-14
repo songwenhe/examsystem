@@ -6,13 +6,8 @@
           <span class="el-icon-time surplus">考试倒计时 - {{ surplusTime }}</span>
         </el-card>
         <el-form :model="answerCardForm" ref="answerCardForm" class="cardForm">
-          <el-form-item
-            label=""
-            v-for="(item, index) in answerCardForm.problemList"
-            :key="item.id"
-            :prop="'problemList.' + index + '.value'"
-            :rules="[{ required: true, message: '', trigger: 'blur' }]"
-          >
+          <el-form-item label="" v-for="(item, index) in answerCardForm.problemList" :key="item.id"
+            :prop="'problemList.' + index + '.value'" :rules="[{ required: true, message: '', trigger: 'blur' }]">
             <el-card class="answer-area" :class="index + 1 === currentIndex ? '' : 'hidden-s'">
               <el-divider class="answer-title">
                 <i class="el-icon-question">题目描述</i>
@@ -32,10 +27,14 @@
                 <!-- {{ item.value }} -->
                 <!-- 单选 -->
                 <div class="select" v-if="item.questionType === 0">
-                  <el-radio label="A" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionA }}</el-radio>
-                  <el-radio label="B" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionB }}</el-radio>
-                  <el-radio label="C" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionC }}</el-radio>
-                  <el-radio label="D" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionD }}</el-radio>
+                  <el-radio label="A" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionA
+                  }}</el-radio>
+                  <el-radio label="B" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionB
+                  }}</el-radio>
+                  <el-radio label="C" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionC
+                  }}</el-radio>
+                  <el-radio label="D" v-model="item.value" @change="handleVal(index, item.value)" border>{{ item.optionD
+                  }}</el-radio>
                 </div>
                 <!-- 多选 -->
                 <div class="select-mut" v-else-if="item.questionType === 1">
@@ -48,7 +47,8 @@
                 </div>
                 <!-- 问答 + 代码 -->
                 <div class="ques" v-else>
-                  <el-input type="textarea" :rows="10" placeholder="请输入内容" v-model="item.value" @change="handleVal(index, item.value)">
+                  <el-input type="textarea" :rows="10" placeholder="请输入内容" v-model="item.value"
+                    @change="handleVal(index, item.value)">
                   </el-input>
                 </div>
               </div>
@@ -78,16 +78,10 @@
         </el-card>
         <el-card class="aside-bottom">
           <div class="select-problem">
-            <button
-              class="problem"
-              v-for="index in problemNum"
-              :key="index"
-              @click="showProblem(index)"
-              :class="{
-                'problem-current': index === currentIndex,
-                'problem-active': existArray[index]
-              }"
-            >
+            <button class="problem" v-for="index in problemNum" :key="index" @click="showProblem(index)" :class="{
+              'problem-current': index === currentIndex,
+              'problem-active': existArray[index]
+            }">
               {{ index }}
             </button>
             <button class="problem-fill" v-for="index in fillNum" :key="index + 'sss'"></button>
@@ -100,7 +94,7 @@
 </template>
 
 <script>
-const axios = require('axios')
+
 import { mapState, mapMutations } from 'vuex'
 export default {
   props: ['id', 'name'],
@@ -191,9 +185,9 @@ export default {
       this.$refs.answerCardForm.clearValidate()
     },
     getQuestions() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/question/api/getQuestionsByContestId',
+        url: 'question/api/getQuestionsByContestId',
         params: { contestId: this.$route.params.id }
       }).then((response) => {
         response.data.forEach((item) => {
@@ -226,9 +220,9 @@ export default {
 
         console.log(this.answer)
         // const obj = {}
-        axios({
+        this.$http({
           method: 'post',
-          url: 'http://127.0.0.1:8088/grade/api/submitContest',
+          url: 'grade/api/submitContest',
           data: {
             answerJson: answer.join('_~_'),
             studentId: this.userId,
@@ -259,6 +253,7 @@ export default {
   padding: 20px;
   width: 1300px;
 }
+
 .el-main {
   padding: 0 20px;
 }
@@ -296,8 +291,8 @@ export default {
     border-color: #e74c3c;
   }
 
-  .el-radio.is-bordered + .el-radio.is-bordered,
-  .el-checkbox.is-bordered + .el-checkbox.is-bordered {
+  .el-radio.is-bordered+.el-radio.is-bordered,
+  .el-checkbox.is-bordered+.el-checkbox.is-bordered {
     margin-left: 0;
   }
 }
@@ -323,13 +318,13 @@ export default {
     border-bottom: none;
   }
 
-  dd > span:first-child {
+  dd>span:first-child {
     min-width: 60px;
     font-weight: 600;
     letter-spacing: 0.1em;
   }
 
-  dd > span:last-child {
+  dd>span:last-child {
     padding-left: 20px;
   }
 }

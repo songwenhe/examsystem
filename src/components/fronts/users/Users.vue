@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -60,9 +59,9 @@ export default {
   },
   methods: {
     async getAccount() {
-      const response = await axios({
+      const response = await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/pageAccount',
+        url: 'account/pageAccount',
         data: this.query
       })
       this.tableData = response.data.list.map((item) => {

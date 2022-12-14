@@ -6,15 +6,8 @@
             <el-radio-button :label="false">1</el-radio-button>
             <el-radio-button :label="true">1</el-radio-button>
           </el-radio-group> -->
-        <el-menu
-          background-color="#304156"
-          :router="true"
-          :collapse-transition="true"
-          :collapse="isCollapse"
-          :default-active="index"
-          class="el-menu-vertical-demo nav"
-          @select="slt"
-        >
+        <el-menu background-color="#304156" :router="true" :collapse-transition="true" :collapse="isCollapse"
+          :default-active="index" class="el-menu-vertical-demo nav" @select="slt">
           <el-menu-item index="/_backstagepage/_contests" class="nav-item">
             <i class="el-icon-s-platform"></i>
             <span slot="title">考试管理</span>
@@ -73,7 +66,7 @@
   </div>
 </template>
 <script>
-const axios = require('axios')
+
 export default {
   name: 'backstagepage',
   data() {
@@ -107,9 +100,9 @@ export default {
       this.$router.push('/_frontpage')
     },
     async getUser() {
-      const response = await axios({
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/account/getById',
+        url: 'account/getById',
         params: { id: this.userId }
       })
       this.userImg = 'http://localhost:8088/' + response.data.avatarImgUrl
@@ -131,27 +124,33 @@ export default {
   margin: 0;
   height: 60px;
   justify-content: space-between;
+
   .front {
     color: #fff;
     margin-right: 20px;
   }
+
   .left {
     display: flex;
     align-items: center;
   }
+
   .right {
     display: flex;
     align-items: center;
   }
+
   .img {
     border-radius: 50%;
     margin-right: 10px;
     height: 90%;
   }
+
   .drop {
     margin-right: 20px;
   }
 }
+
 .toggle-menu {
   // width: 100%;
   color: #fff;
@@ -166,11 +165,12 @@ export default {
   color: blue;
   letter-spacing: 0.5em;
 }
+
 .el-main {
   padding: 20px;
 }
 
-body > .el-container {
+body>.el-container {
   margin-bottom: 40px;
 }
 
@@ -190,10 +190,12 @@ body > .el-container {
 .el-icon-arrow-down {
   font-size: 12px;
 }
+
 .nav {
   height: 100%;
   display: flex;
   flex-direction: column;
+
   // justify-content: space-evenly;
   .nav-item {
     color: #bfcbd9;

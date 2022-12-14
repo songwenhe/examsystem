@@ -32,26 +32,18 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.size"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.page"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.size" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.page"></el-pagination>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
-
 export default {
   created() {
     this.getPosts()
@@ -118,9 +110,9 @@ export default {
       }
     },
     pagePostByAuthorId() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/post/api/pagePostByAuthorId',
+        url: 'post/api/pagePostByAuthorId',
         params: this.query
       }).then((response) => {
         this.total = response.data.total
@@ -141,9 +133,9 @@ export default {
         center: true
       })
         .then(() => {
-          axios({
+          this.$http({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/post/api/deletePost/' + row.id
+            url: 'post/api/deletePost/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -175,7 +167,7 @@ export default {
       this.dialogFormVisible = true
       this.ruleForm.id = row.id
       this.ruleForm.name = row.name
-      this.ruleForm.imageUrl = 'http://127.0.0.1:8088/' + row.imgUrl
+      this.ruleForm.imageUrl = '' + row.imgUrl
     },
     handleTime(now) {
       const time = new Date(now)
@@ -195,9 +187,9 @@ export default {
       return res
     },
     getPosts() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/post/api/pagePosts',
+        url: 'post/api/pagePosts',
         params: this.query
       }).then((response) => {
         /* this.tableData = response.data.list
@@ -235,9 +227,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -246,11 +240,13 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;
   display: block;
 }
+
 .divider {
   .el-divider__text {
     font-size: 30px;

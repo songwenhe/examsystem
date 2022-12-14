@@ -22,7 +22,6 @@
 </template>
 
 <script>
-const axios = require('axios')
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
@@ -72,9 +71,9 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        axios({
+        this.$http({
           method: 'get',
-          url: 'http://127.0.0.1:8088/account/changePassword',
+          url: 'account/changePassword',
           params: this.ruleForm
         }).then((response) => {
           if (response.data.success) {
@@ -95,4 +94,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

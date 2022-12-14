@@ -8,21 +8,15 @@
         <el-table-column align="center" label="考试结束时间" prop="finishTime"></el-table-column>
         <el-table-column align="center" label="成绩" prop="result"></el-table-column>
       </el-table>
-      <el-pagination
-        @current-change="pageChange"
-        :page-size="query.pageSize"
-        :pager-count="11"
-        layout="prev, pager, next"
-        :total="total"
-        style="margin-left: 0px"
-        :current-page="query.pageNum"
-      ></el-pagination>
+      <el-pagination @current-change="pageChange" :page-size="query.pageSize" :pager-count="11"
+        layout="prev, pager, next" :total="total" style="margin-left: 0px"
+        :current-page="query.pageNum"></el-pagination>
     </el-card>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
+
 export default {
   data() {
     return {
@@ -51,9 +45,9 @@ export default {
       this.getGrade()
     },
     getGrade() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/grade/api/pageGradeByStudentId',
+        url: 'grade/api/pageGradeByStudentId',
         params: this.query
       }).then((response) => {
         this.total = response.data.totalPageNum
@@ -67,9 +61,9 @@ export default {
       })
     },
     getContents() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/contest/api/pageContest',
+        url: 'contest/api/pageContest',
         params: this.query1
       }).then((response) => {
         this.pageContest = response.data.list
@@ -102,4 +96,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

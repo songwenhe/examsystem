@@ -16,24 +16,17 @@
       <el-table-column align="center" label="回帖时间" prop="createTime"></el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      @current-change="pageChange"
-      :page-size="query.pageSize"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="total"
-      style="margin-left: 0px"
-      :current-page="query.pageNum"
-    ></el-pagination>
+    <el-pagination @current-change="pageChange" :page-size="query.pageSize" :pager-count="11" layout="prev, pager, next"
+      :total="total" style="margin-left: 0px" :current-page="query.pageNum"></el-pagination>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
 export default {
   created() {
     this.getUserList()
@@ -68,9 +61,9 @@ export default {
         center: true
       })
         .then(() => {
-          axios({
+          this.$http({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/comment/api/deleteComment/' + row.id
+            url: 'comment/api/deleteComment/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -108,7 +101,7 @@ export default {
       this.dialogFormVisible = true
       this.ruleForm.id = row.id
       this.ruleForm.name = row.name
-      this.ruleForm.imageUrl = 'http://127.0.0.1:8088/' + row.imgUrl
+      this.ruleForm.imageUrl = '' + row.imgUrl
     },
     handleTime(now) {
       const time = new Date(now)
@@ -127,30 +120,28 @@ export default {
       res = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
       return res
     },
-    getComments() {
-      axios({
+    async getComments() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/comment/api/pageComment',
+        url: 'comment/api/pageComment',
         params: this.query
-      }).then((response) => {
-        console.log(response)
-        this.total = response.data.totalPageSize
-        this.tableData = response.data.comments.map((item) => {
-          return Object.assign(item, {
-            createTime: this.handleTime(item.createTime),
-            name: this.getUsername(item.id)
-          })
+      })
+      console.log(response)
+      this.total = response.data.totalPageSize
+      this.tableData = response.data.comments.map((item) => {
+        return Object.assign(item, {
+          createTime: this.handleTime(item.createTime),
+          name: this.getUsername(item.id)
         })
       })
     },
-    getUserList() {
-      axios({
+    async getUserList() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/account/list'
-      }).then((response) => {
-        this.userList = response.data
-        this.getComments()
+        url: 'account/list'
       })
+      this.userList = response.data
+      this.getComments()
     },
     getUsername(id) {
       let username = this.userList.find((item) => id === item.id)
@@ -169,9 +160,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -180,11 +173,13 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;
   display: block;
 }
+
 .divider {
   .el-divider__text {
     font-size: 30px;

@@ -13,9 +13,9 @@
             <a href="javascript:;" @click="subs(i.id)">
               <img :src="i.imgUrl" class="image" />
             </a>
-            <button type="button" class="card-title" @click="subs(i.id)">
+            <el-button type="text" @click="subs(i.id)" class="subTitle">
               <span>{{ i.name }}</span>
-            </button>
+            </el-button>
             <div class="cart-author">
               <span><i class="el-icon-user-solid"> </i> {{ userName }}</span>
             </div>
@@ -33,7 +33,6 @@
 </template>
 
 <script>
-const axios = require('axios')
 export default {
   data() {
     return {
@@ -68,9 +67,9 @@ export default {
       else return '综合实训'
     },
     getSubjects() {
-      axios({
+      this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects',
+        url: 'subject/api/pageSubjects',
         params: this.query
       }).then((response) => {
         /* this.tableData = response.data.list
@@ -126,6 +125,11 @@ export default {
   padding-right: 0;
 }
 
+.subTitle {
+  font-size: 20px;
+  text-align: center;
+}
+
 .card-content {
   position: relative;
   width: 260px;
@@ -133,28 +137,6 @@ export default {
   margin-bottom: 20px;
   margin-left: 33px;
   border-radius: 8px;
-}
-
-.card-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #409eff;
-  padding-left: 0;
-  padding-right: 0;
-  border-color: transparent;
-  display: inline-block;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  background: #fff;
-  border: 1px solid #dcdfe6;
-  text-align: center;
-  box-sizing: border-box;
-  outline: 0;
-  margin: 0;
-  transition: 0.1s;
-  padding: 12px 20px;
-  border-radius: 4px;
 }
 
 .image {

@@ -1,7 +1,8 @@
 <template>
   <div class="mypost-container">
     <el-card class="box-card" shadow>
-      <el-divider content-position="left"><i class="el-icon-chat-dot-square" style="font-size: 20px">我的发帖</i></el-divider>
+      <el-divider content-position="left"><i class="el-icon-chat-dot-square"
+          style="font-size: 20px">我的发帖</i></el-divider>
       <div v-for="i in tableData" :key="i" class="post">
         <a href="javascript:" class="title">
           <h4>{{ i.title }}</h4>
@@ -13,21 +14,15 @@
           <span>发布于：{{ i.createTime }}</span>
         </div>
       </div>
-      <el-pagination
-        @current-change="pageChange"
-        :page-size="query.pageSize"
-        :pager-count="11"
-        layout="prev, pager, next"
-        :total="total"
-        style="margin-left: 0px"
-        :current-page="query.pageNum"
-      ></el-pagination>
+      <el-pagination @current-change="pageChange" :page-size="query.pageSize" :pager-count="11"
+        layout="prev, pager, next" :total="total" style="margin-left: 0px"
+        :current-page="query.pageNum"></el-pagination>
     </el-card>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
+
 export default {
   data() {
     return {
@@ -48,9 +43,9 @@ export default {
       this.getMypost()
     },
     getMypost() {
-      axios({
+      this.$http({
         methods: 'get',
-        url: 'http://127.0.0.1:8088/post/api/pagePosts',
+        url: 'post/api/pagePosts',
         params: this.query
       }).then((response) => {
         this.total = response.data.total
@@ -89,6 +84,7 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 .title {
   text-decoration: none;
   font-size: 22px;

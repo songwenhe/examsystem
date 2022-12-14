@@ -68,19 +68,12 @@
             </el-card>
           </el-col>
         </el-row>
-        <el-row class="row-bg">
-          <el-col :span="24"><el-card>2</el-card></el-col>
-        </el-row>
-        <el-row class="row-bg">
-          <el-col :span="24"><el-card>2</el-card></el-col>
-        </el-row>
       </el-aside>
     </el-container>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
 export default {
   data() {
     return {
@@ -114,9 +107,9 @@ export default {
       this.getUsers()
     },
     async getShare() {
-      const response = await axios({
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/post/api/pagePosts',
+        url: 'post/api/pagePosts',
         params: this.query
       })
       this.total = response.data.total
@@ -130,9 +123,9 @@ export default {
       })
     },
     async getUsers() {
-      const response = await axios({
+      const response = await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/pageAccount',
+        url: 'account/pageAccount',
         data: this.query1
       })
       this.pageUsers = response.data.list

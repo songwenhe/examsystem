@@ -25,8 +25,10 @@
       <el-table-column align="center" label="分值" prop="score"></el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" circle></el-button>
-          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)" circle></el-button>
+          <el-button size="medium" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"
+            circle></el-button>
+          <el-button size="medium" type="danger" icon="el-icon-delete" @click="openDel(scope.$index, scope.row)"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -132,7 +134,6 @@
 </template>
 
 <script>
-const axios = require('axios')
 import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
@@ -221,9 +222,9 @@ export default {
         center: true
       })
         .then(() => {
-          axios({
+          this.$http({
             method: 'delete',
-            url: 'http://127.0.0.1:8088/question/api/deleteQuestion/' + row.id
+            url: 'question/api/deleteQuestion/' + row.id
           }).then((response) => {
             if (response.data.success) {
               this.$message({
@@ -260,48 +261,43 @@ export default {
       this.dialogFormVisible = true
       this.ruleForm = row
     },
-    putContest() {
-      axios({
+    async putContest() {
+      await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/question/api/updateQuestion',
+        url: 'question/api/updateQuestion',
         data: this.ruleForm
-      }).then((response) => {
-        this.getProblems()
-        this.clearForm()
       })
+      this.getProblems()
+      this.clearForm()
     },
-    addSubject() {
-      axios({
+    async addSubject() {
+      await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/question/api/addQuestion',
+        url: 'question/api/addQuestion',
         data: this.ruleTable
-      }).then((response) => {
-        this.getProblems()
-        this.clearTable()
       })
+      this.getProblems()
+      this.clearTable()
     },
-    getProblems() {
-      axios({
+    async getProblems() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/question/api/getQuestionsByContestId',
+        url: 'question/api/getQuestionsByContestId',
         params: { contestId: this.$route.params.id }
-      }).then((response) => {
-        console.log(response.data)
-        this.tableData = response.data.map((item) => {
-          return Object.assign(item, {
-            questionTypeName: this.getQuestionType(item.questionType)
-          })
+      })
+      this.tableData = response.data.map((item) => {
+        return Object.assign(item, {
+          questionTypeName: this.getQuestionType(item.questionType)
         })
       })
     },
-    getSubjects() {
-      axios({
+    async getSubjects() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/subject/api/pageSubjects?size=999'
-      }).then((response) => {
-        this.pageSubjects = response.data.list
-        this.getProblems()
+        url: 'subject/api/pageSubjects?size=999'
       })
+      this.pageSubjects = response.data.list
+      this.getProblems()
     },
     getQuestionType(type) {
       if (type === 0) {
@@ -316,4 +312,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-const axios = require('axios')
+
 export default {
   data() {
     return {
@@ -74,9 +74,9 @@ export default {
       this.ruleForm.ImgUrl = URL.createObjectURL(file.raw)
     },
     getAccount() {
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/pageAccount',
+        url: 'account/pageAccount',
         data: this.query
       }).then((response) => {
         this.tableData = response.data.list.map((item) => {
@@ -96,9 +96,9 @@ export default {
         center: true
       })
         .then(() => {
-          axios({
+          this.$http({
             method: 'put',
-            url: 'http://127.0.0.1:8088/account/updateIgnoreNull',
+            url: 'account/updateIgnoreNull',
             data: this.ruleForm
           }).then((response) => {
             if (response.data.success) {

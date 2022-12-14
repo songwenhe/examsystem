@@ -21,7 +21,6 @@
 </template>
 
 <script>
-const axios = require('axios')
 import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
@@ -44,30 +43,28 @@ export default {
     this.getUsers()
   },
   methods: {
-    getGrade() {
-      axios({
+    async getGrade() {
+      const response = await this.$http({
         method: 'get',
-        url: 'http://127.0.0.1:8088/grade/api/pageGradeByContestId',
+        url: 'grade/api/pageGradeByContestId',
         params: { keyword: this.$route.params.id }
-      }).then((response) => {
-        console.log(response)
-        this.tableData = response.data.list.map((item) => {
-          return {
-            ...item,
-            name: this.userName(item.studentId)
-          }
-        })
+      })
+      console.log(response)
+      this.tableData = response.data.list.map((item) => {
+        return {
+          ...item,
+          name: this.userName(item.studentId)
+        }
       })
     },
-    getUsers() {
-      axios({
+    async getUsers() {
+      const response = await this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/account/pageAccount',
+        url: 'account/pageAccount',
         data: this.query
-      }).then((response) => {
-        this.pageUsers = response.data.list
-        this.getGrade()
       })
+      this.pageUsers = response.data.list
+      this.getGrade()
     },
     userName(id) {
       let user = this.pageUsers.find((item) => id === item.id)
@@ -78,4 +75,6 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+</style>

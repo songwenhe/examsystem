@@ -7,13 +7,7 @@
         <el-breadcrumb-item>文章发布</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-alert
-      type="warning"
-      title="请注意帖子的言语措辞,如果出现恶意中伤别人,诽谤他人,帖子将被删除,发帖人将会被惩罚。"
-      show-icon
-      center
-      class="postAlert"
-    >
+    <el-alert type="warning" title="请注意帖子的言语措辞,如果出现恶意中伤别人,诽谤他人,帖子将被删除,发帖人将会被惩罚。" show-icon center class="postAlert">
     </el-alert>
 
     <el-input placeholder="请输入内容" v-model="title" class="postTitle">
@@ -26,7 +20,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // 加粗，斜体，下划线，删除线
   ['blockquote', 'code-block'], // 引用，代码块
@@ -71,9 +64,9 @@ export default {
         title: this.title.trim()
       }
       console.log(this.editor)
-      axios({
+      this.$http({
         method: 'post',
-        url: 'http://127.0.0.1:8088/post/api/addPost',
+        url: 'post/api/addPost',
         data: temp
       }).then((response) => {
         console.log(response)
@@ -109,11 +102,14 @@ export default {
   padding: 20px;
   width: 1300px;
 }
+
 .editor {
   height: 400px;
 }
+
 .el-alert {
   margin: 20px 0;
+
   .el-alert__description {
     font-size: 20px;
   }
@@ -135,11 +131,13 @@ export default {
     font-size: 15px;
   }
 }
+
 .postTitle {
   border-radius: 6px;
   margin-bottom: 20px;
   outline: none;
 }
+
 .postTitle.el-input.el-input-group.el-input-group--prepend {
   width: 500px;
 }
